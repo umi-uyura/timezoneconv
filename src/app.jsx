@@ -7,6 +7,7 @@ injectTapEventPlugin();
 var mui = require("material-ui");
 var ThemeManager = new mui.Styles.ThemeManager();
 var Paper = mui.Paper;
+var Toggle = mui.Toggle;
 var TimeCard = require('./timecard.jsx');
 
 var App = React.createClass({
@@ -24,9 +25,13 @@ var App = React.createClass({
       muiTheme: ThemeManager.getCurrentTheme()
     };
   },
-  onChangeFrom: function() {
+  _onChangeFrom: function() {
   },
-  onChangeTo: function() {
+  _onChangeTo: function() {
+  },
+  _onToggle: function(e, toggled) {
+    this.refs.timecardFrom.setTimeFormat(toggled ? '24hr' : 'ampm');
+    this.refs.timecardTo.setTimeFormat(toggled ? '24hr' : 'ampm');
   },
   styles: {
     card: {
@@ -36,8 +41,12 @@ var App = React.createClass({
   render: function() {
     return (
       <Paper style={this.styles.card} zDepth={1}>
-        <TimeCard onChange={this.onChangeFrom} />
-        <TimeCard fromto="to" onChange={this.onChangeTo} />
+        <TimeCard ref="timecardFrom" onChange={this._onChangeFrom} />
+        <Toggle ref="toggleTimeformat"
+                label="24時間表記"
+                defaultToggled={true}
+                onToggle={this._onToggle} />
+        <TimeCard ref="timecardTo" fromto="to" onChange={this._onChangeTo} />
       </Paper>
     );
   }

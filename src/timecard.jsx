@@ -10,7 +10,7 @@ var tzdetect = require('jstimezonedetect');
 var Paper = mui.Paper;
 var TextField = mui.TextField;
 var DatePicker = mui.DatePicker;
-var TimePicker = mui.TimePicker;
+var DualTimePicker = require('./dualtimepicker.jsx');
 var Toggle = mui.Toggle;
 
 var tz = tzdetect.jstz.determine();
@@ -31,42 +31,6 @@ function browserLanguage() {
   }
 }
 
-var DualTimePicker = React.createClass({
-  getInitialState: function() {
-    return {
-      format24hr: true,
-      time: new Date()
-    };
-  },
-  _onChange: function(e, t) {
-    this.setState({time: t});
-    this.refs.picker24HR.setTime(t);
-    this.refs.pickerAMPM.setTime(t);
-  },
-  render: function() {
-    var format = this.state.format24hr ? '24hr' : 'ampm';
-    var styleVisible = {};
-    var styleHide = { display: 'none' };
-
-    return (
-      <div>
-        <TimePicker ref="picker24HR"
-                    style={this.state.format24hr ? styleVisible : styleHide }
-                    format="24hr"
-                    disabled={this.props.disabled}
-                    onChange={this._onChange}
-                    defaultTime={this.state.time} />
-        <TimePicker ref="pickerAMPM"
-                    style={this.state.format24hr ? styleHide : styleVisible }
-                    format="ampm"
-                    disabled={this.props.disabled}
-                    onChange={this._onChange}
-                    defaultTime={this.state.time} />
-      </div>
-    );
-  }
-});
-
 var TimeCard = React.createClass({
   getDefaultProps: function() {
     return {
@@ -79,10 +43,10 @@ var TimeCard = React.createClass({
     value: React.PropTypes.object,
     onChange: React.PropTypes.func.isRequired
   },
-  _onChange: function() {
+  setTimeFormat: function(format) {
+    this.refs.timepicker.setState({ format24hr: (format === '24hr') });
   },
-  _onToggle: function(e, toggled) {
-    this.refs.timepicker.setState({ format24hr: toggled });
+  _onChange: function() {
   },
   styles: {
     card: {
@@ -105,11 +69,6 @@ var TimeCard = React.createClass({
       <Paper style={this.styles.card} zDepth={2}>
         <DatePicker formatDate={this.formatDate} defaultDate={this.props.value} />
         <DualTimePicker ref="timepicker" disabled={disabled} />
-        <Toggle ref="toggleTimeformat"
-                label="24時間表記"
-                defaultToggled={true}
-                disabled={disabled}
-                onToggle={this._onToggle} />
         <TextField style={this.styles.textfield}
                    disabled={disabled}
                    defaultValue={tz.name()} />
