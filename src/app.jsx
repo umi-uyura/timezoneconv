@@ -15,8 +15,21 @@ var Paper = mui.Paper;
 var Toggle = mui.Toggle;
 var TimeCard = require('./timecard.jsx');
 
-var tz = tzdetect.jstz.determine();
 var lang = browserLanguage();
+console.log('Browser launguage: ' + lang);
+
+moment.locale(lang ? lang : 'en');
+console.log('Moment.js: ' + moment.locale());
+
+var tz = tzdetect.jstz.determine();
+console.log('Timezone detect: ' + tz.name());
+
+var tzv = moment.tz('America/Toronto');
+console.log('tzv');
+console.log(tzv);
+console.log(tzv.format());
+
+// TODO: tzの検証、存在しない場合はUTCにする
 
 console.log(moment.tz._names);
 
@@ -24,11 +37,6 @@ var tzitems = _.map(moment.tz.names(), function(v) {
   return { payload: v, text: v };
 });
 
-console.log('Moment.js: ' + moment.locale());
-console.log('Timezone detect: ' + tz.name());
-console.log('Browser launguage: ' + lang);
-
-moment.locale(lang ? lang : 'en');
 
 function browserLanguage() {
   try {
