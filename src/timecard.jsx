@@ -2,51 +2,73 @@
 
 var React = require('react');
 var mui = require('material-ui');
-var moment = require('moment');
+//var moment = require('moment');
+var moment = require('moment-timezone');
 require('moment/min/locales');
-//var mtz = require('moment-timezone');
-var tzdetect = require('jstimezonedetect');
 
 var Paper = mui.Paper;
 var TextField = mui.TextField;
 var DatePicker = mui.DatePicker;
 var DualTimePicker = require('./dualtimepicker.jsx');
-var Toggle = mui.Toggle;
-
-var tz = tzdetect.jstz.determine();
-var lang = browserLanguage();
-
-console.log('Moment.js: ' + moment.locale());
-console.log('Timezone detect: ' + tz.name());
-console.log('Browser launguage: ' + lang);
-
-moment.locale(lang ? lang : 'en');
-
-function browserLanguage() {
-  try {
-    return (navigator.browserLanguage || navigator.language || navigator.userLanguage);
-  }
-  catch(e) {
-    return undefined;
-  }
-}
+var DropDownMenu = mui.DropDownMenu;
 
 var TimeCard = React.createClass({
   getDefaultProps: function() {
     return {
       fromto: 'from',
-      value: new Date()
+      tz_items: []
     };
   },
   propTypes: {
     fromto: React.PropTypes.string.isRequired,
     value: React.PropTypes.object,
+    tz_items: React.PropTypes.array,
     onChange: React.PropTypes.func.isRequired
+  },
+  getInitialState: function() {
+    return {
+      time: new Date(),
+      tz: 'UTC'
+    };
   },
   setTimeFormat: function(format) {
     this.refs.timepicker.setState({ format24hr: (format === '24hr') });
   },
-  _onChange: function() {
+  _onChangeDate: function(e, v) {
+    var t = this.state.time;
+    t.setFullYear(v.getFullYear());
+    t.setMonth(v.getMonth());
+    t.setDate(v.getDate());
+
+    this.setState({time: t});
+
+    console.log('Timecard::onChangeDate() - ' + e + ' / ' + v + ' / ' + t);
+
+    this.props.onChange(e, t);
+  },
+  _onChangeTime: function(e, v) {
+    var t = this.state.time;
+    t.setHours(v.getHours());
+    t.setMinutes(v.getMinutes());
+
+    this.setState({time: t});
+
+    console.log('Timecard::onChangeTime() - ' + e + ' / ' + v + ' / ' + t);
+
+    this.props.onChange(e, t);
+  },
+  _onChangeTZ: function(e, v) {
+    console.log('Timecard::onChangeTZ() - ' + e + ' / ' + v);
+    this.props.onChange(e, v);
+  },
+  setDateTime: function(dt) {
+    console.log('setDateTime: ' + dt + ' / ' + this.state.tz);
+    var m = moment.tz(dt, this.state.tz);
+    var mm = m.toDate();
+    console.log('setDateTime: ' + m.format() + ' / ' + m.utcOffset() + ' / ' + mm);
+    this.refs.datepicker.setDate(mm);
+    this.refs.timepicker.setTime(mm);
+    /* this.refs.tzfield.setText(); */
   },
   styles: {
     card: {
@@ -63,17 +85,25 @@ var TimeCard = React.createClass({
     return m.format('l (ddd)');
   },
   render: function() {
-    var m = moment(this.props.value);
+    var m = moment(this.state.time);
     var disabled = this.props.fromto === 'to';
     return (
       <Paper style={this.styles.card} zDepth={2}>
-        <DatePicker formatDate={this.formatDate} defaultDate={this.props.value} />
-        <DualTimePicker ref="timepicker" disabled={disabled} />
-        <TextField style={this.styles.textfield}
-                   disabled={disabled}
-                   defaultValue={tz.name()} />
+        <DatePicker ref="datepicker"
+                    formatDate={this.formatDate}
+                    defaultDate={this.state.time}
+                    disabled={disabled}
+                    onChange={this._onChangeDate} />
+        <DualTimePicker ref="timepicker"
+                        disabled={disabled}
+                        onChange={this._onChangeTime} />
+        <TextField ref="tzfield"
+                   style={this.styles.textfield}
+                   defaultValue={this.props.tz}
+                   onChange={this._onChangeTZ} />
       </Paper>
     );
+    /* <DropDownMenu menuItems={this.props.tz_items} /> */
   }
 });
 

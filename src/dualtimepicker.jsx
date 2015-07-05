@@ -14,9 +14,19 @@ var DualTimePicker = React.createClass({
     };
   },
   _onChange: function(e, t) {
-    this.setState({time: t});
+    this.setTime(t);
+    this.props.onChange(e, t);
+  },
+  getTime: function() {
+    return this.state.time;
+  },
+  setTime: function(t) {
+    console.log('DualTimePicker - 1 - ' + t);
     this.refs.picker24HR.setTime(t);
+    console.log('DualTimePicker - 2');
     this.refs.pickerAMPM.setTime(t);
+    console.log('DualTimePicker - 3');
+    this.setState({time: t});
   },
   render: function() {
     var format = this.state.format24hr ? '24hr' : 'ampm';
