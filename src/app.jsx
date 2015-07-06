@@ -98,7 +98,6 @@ var App = React.createClass({
         <TimeCard ref="timecardTo"
                   lang={lang}
                   initial_tz="UTC"
-                  fromto="to"
                   onChange={this._onChangeTo} />
       </Paper>
     );
