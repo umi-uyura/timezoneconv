@@ -4,12 +4,12 @@ var React = require('react');
 var mui = require('material-ui');
 var moment = require('moment-timezone');
 require('moment/min/locales');
+var _ = require('underscore');
 
 var Paper = mui.Paper;
 var TextField = mui.TextField;
 var DatePicker = mui.DatePicker;
 var DualTimePicker = require('./dualtimepicker.jsx');
-var DropDownMenu = mui.DropDownMenu;
 
 var TimeCard = React.createClass({
   getDefaultProps: function() {
@@ -85,9 +85,24 @@ var TimeCard = React.createClass({
 
     this.props.onChange(e, ndt);
   },
-  _onChangeTZ: function(e, v) {
-    console.log('Timecard::onChangeTZ() - ' + e + ' / ' + v);
-    this.props.onChange(e, v);
+  _onChangeTZ: function(v) {
+    if (_.contains(moment.tz.names(), v.target.value)) {
+      console.log('Timecard::onChangeTZ() - Hit! = ' + v.target.value + ' <- ' + this.state.tz);
+      console.log('Timecard::onChangeTZ() - ' + this.state.time + ' / ' + this.state.time.getTimezoneOffset());
+
+      var utcTime = new Date(this.state.time.getTime() - (this.state.time.getTimezoneOffset() * 60 * 1000));
+      console.log('Timecard::onChangeTZ() - utcTime = ' + utcTime);
+
+      var tzTime = moment.tz(utcTime, v.target.value);
+      console.log('Timecard::onChangeTZ() - tzTime = ' + tzTime.format());
+
+      this.setState({
+        tz: v.target.value,
+        time: tzTime.toDate()
+      });
+      this.refs.datepicker.setDate(tzTime.toDate());
+      this.refs.timepicker.setTime(tzTime.toDate());
+    }
   },
   styles: {
     card: {
@@ -124,7 +139,6 @@ var TimeCard = React.createClass({
                    onChange={this._onChangeTZ} />
       </Paper>
     );
-    /* <DropDownMenu menuItems={this.props.tz_items} /> */
   }
 });
 

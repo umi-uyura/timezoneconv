@@ -87,7 +87,7 @@ var App = React.createClass({
       <Paper style={this.styles.card} zDepth={1}>
         <TimeCard ref="timecardFrom"
                   lang={lang}
-                  initial_tz={tz.name()}
+                  initial_tz="UTC"
                   onChange={this._onChangeFrom} />
         <div style={this.styles.toggle_wrap}>
           <Toggle ref="toggleTimeformat"
@@ -97,7 +97,7 @@ var App = React.createClass({
         </div>
         <TimeCard ref="timecardTo"
                   lang={lang}
-                  initial_tz="UTC"
+                  initial_tz={tz.name()}
                   onChange={this._onChangeTo} />
       </Paper>
     );
