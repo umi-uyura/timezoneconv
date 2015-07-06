@@ -85,6 +85,7 @@ var App = React.createClass({
     return (
       <Paper style={this.styles.card} zDepth={1}>
         <TimeCard ref="timecardFrom"
+                  lang={lang}
                   tz={tz.name()}
                   onChange={this._onChangeFrom} />
         <div style={this.styles.toggle_wrap}>
@@ -94,6 +95,7 @@ var App = React.createClass({
                   onToggle={this._onToggle} />
         </div>
         <TimeCard ref="timecardTo"
+                  lang={lang}
                   tz="UTC"
                   onChange={this._onChangeTo} />
       </Paper>

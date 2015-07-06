@@ -2,16 +2,27 @@
 
 var React = require('react');
 var mui = require('material-ui');
+var moment = require('moment-timezone');
+require('moment/min/locales');
 
 var DatePicker = mui.DatePicker;
 var TimePicker = mui.TimePicker;
 
 var DualTimePicker = React.createClass({
+  getDefaultProps: function() {
+    return {
+      lang: 'en'
+    };
+  },
   getInitialState: function() {
     return {
       format24hr: true,
+      tz: 'UTC',
       time: new Date()
     };
+  },
+  componentWillMount: function() {
+    moment.locale(this.props.lang);
   },
   _onChange: function(e, t) {
     this.setTime(t);

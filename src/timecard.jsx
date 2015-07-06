@@ -2,7 +2,6 @@
 
 var React = require('react');
 var mui = require('material-ui');
-//var moment = require('moment');
 var moment = require('moment-timezone');
 require('moment/min/locales');
 
@@ -16,20 +15,24 @@ var TimeCard = React.createClass({
   getDefaultProps: function() {
     return {
       fromto: 'from',
+      lang: 'en',
+      tz: 'UTC',
       tz_items: []
     };
   },
   propTypes: {
     fromto: React.PropTypes.string.isRequired,
-    value: React.PropTypes.object,
     tz_items: React.PropTypes.array,
     onChange: React.PropTypes.func.isRequired
   },
   getInitialState: function() {
     return {
       time: new Date(),
-      tz: 'UTC'
+      tz: this.props.tz
     };
+  },
+  componentWillMount: function() {
+    moment.locale(this.props.lang);
   },
   setTimeFormat: function(format) {
     this.refs.timepicker.setState({ format24hr: (format === '24hr') });
@@ -68,7 +71,6 @@ var TimeCard = React.createClass({
     console.log('setDateTime: ' + m.format() + ' / ' + m.utcOffset() + ' / ' + mm);
     this.refs.datepicker.setDate(mm);
     this.refs.timepicker.setTime(mm);
-    /* this.refs.tzfield.setText(); */
   },
   styles: {
     card: {
@@ -95,6 +97,7 @@ var TimeCard = React.createClass({
                     disabled={disabled}
                     onChange={this._onChangeDate} />
         <DualTimePicker ref="timepicker"
+                        lang={this.props.lang}
                         disabled={disabled}
                         onChange={this._onChangeTime} />
         <TextField ref="tzfield"
