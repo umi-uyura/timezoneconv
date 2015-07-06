@@ -11,6 +11,7 @@ var TimePicker = mui.TimePicker;
 var DualTimePicker = React.createClass({
   getDefaultProps: function() {
     return {
+      initialTime: new Date(),
       lang: 'en'
     };
   },
@@ -18,7 +19,7 @@ var DualTimePicker = React.createClass({
     return {
       format24hr: true,
       tz: 'UTC',
-      time: new Date()
+      time: this.props.initialTime
     };
   },
   componentWillMount: function() {
@@ -32,11 +33,8 @@ var DualTimePicker = React.createClass({
     return this.state.time;
   },
   setTime: function(t) {
-    console.log('DualTimePicker - 1 - ' + t);
     this.refs.picker24HR.setTime(t);
-    console.log('DualTimePicker - 2');
     this.refs.pickerAMPM.setTime(t);
-    console.log('DualTimePicker - 3');
     this.setState({time: t});
   },
   render: function() {

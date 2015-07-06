@@ -15,6 +15,7 @@ var TimeCard = React.createClass({
   getDefaultProps: function() {
     return {
       fromto: 'from',
+      initialTime: new Date(),
       lang: 'en',
       tz: 'UTC',
       tz_items: []
@@ -26,16 +27,32 @@ var TimeCard = React.createClass({
     onChange: React.PropTypes.func.isRequired
   },
   getInitialState: function() {
+    var dispTime = this.calcDispTime(this.props.initialTime);
+
     return {
-      time: new Date(),
+      time: dispTime,
       tz: this.props.tz
     };
   },
   componentWillMount: function() {
     moment.locale(this.props.lang);
   },
+  calcDispTime: function(t) {
+    var baseOffset = t.getTimezoneOffset();
+    var tzTime = moment.tz(t, this.props.tz);
+    var localOffset = tzTime.utcOffset() + baseOffset;
+    var dispTime = new Date(t.getTime() +
+                             (localOffset * 60 * 1000));
+    return dispTime;
+  },
   setTimeFormat: function(format) {
     this.refs.timepicker.setState({ format24hr: (format === '24hr') });
+  },
+  setDateTime: function(dt) {
+    var mm = this.calcDispTime(dt);
+
+    this.refs.datepicker.setDate(mm);
+    this.refs.timepicker.setTime(mm);
   },
   _onChangeDate: function(e, v) {
     var t = this.state.time;
@@ -64,14 +81,6 @@ var TimeCard = React.createClass({
     console.log('Timecard::onChangeTZ() - ' + e + ' / ' + v);
     this.props.onChange(e, v);
   },
-  setDateTime: function(dt) {
-    console.log('setDateTime: ' + dt + ' / ' + this.state.tz);
-    var m = moment.tz(dt, this.state.tz);
-    var mm = m.toDate();
-    console.log('setDateTime: ' + m.format() + ' / ' + m.utcOffset() + ' / ' + mm);
-    this.refs.datepicker.setDate(mm);
-    this.refs.timepicker.setTime(mm);
-  },
   styles: {
     card: {
       margin: '12px',
@@ -97,6 +106,7 @@ var TimeCard = React.createClass({
                     disabled={disabled}
                     onChange={this._onChangeDate} />
         <DualTimePicker ref="timepicker"
+                        initialTime={this.state.time}
                         lang={this.props.lang}
                         disabled={disabled}
                         onChange={this._onChangeTime} />

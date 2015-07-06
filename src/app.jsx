@@ -24,14 +24,14 @@ console.log('Moment.js: ' + moment.locale());
 var tz = tzdetect.jstz.determine();
 console.log('Timezone detect: ' + tz.name());
 
-var tzv = moment.tz('America/Toronto');
-console.log('tzv');
-console.log(tzv);
-console.log(tzv.format());
+/* var tzv = moment.tz('America/Toronto');
+   console.log('tzv');
+   console.log(tzv);
+   console.log(tzv.format()); */
 
 // TODO: tzの検証、存在しない場合はUTCにする
 
-console.log(moment.tz._names);
+/* console.log(moment.tz._names); */
 
 var tzitems = _.map(moment.tz.names(), function(v) {
   return { payload: v, text: v };
@@ -96,7 +96,8 @@ var App = React.createClass({
         </div>
         <TimeCard ref="timecardTo"
                   lang={lang}
-                  tz="UTC"
+                  tz="America/Los_Angeles"
+                  fromto="to"
                   onChange={this._onChangeTo} />
       </Paper>
     );
