@@ -18,7 +18,6 @@ var DualTimePicker = React.createClass({
   getInitialState: function() {
     return {
       format24hr: true,
-      tz: 'UTC',
       time: this.props.initialTime
     };
   },

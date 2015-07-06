@@ -68,6 +68,7 @@ var App = React.createClass({
   },
   _onChangeTo: function(e, v) {
     console.log('_onChangeTo: ' + e + ' / ' + v);
+    this.refs.timecardFrom.setDateTime(v);
   },
   _onToggle: function(e, toggled) {
     this.refs.timecardFrom.setTimeFormat(toggled ? '24hr' : 'ampm');
@@ -86,7 +87,7 @@ var App = React.createClass({
       <Paper style={this.styles.card} zDepth={1}>
         <TimeCard ref="timecardFrom"
                   lang={lang}
-                  tz={tz.name()}
+                  initial_tz={tz.name()}
                   onChange={this._onChangeFrom} />
         <div style={this.styles.toggle_wrap}>
           <Toggle ref="toggleTimeformat"
@@ -96,7 +97,7 @@ var App = React.createClass({
         </div>
         <TimeCard ref="timecardTo"
                   lang={lang}
-                  tz="America/Los_Angeles"
+                  initial_tz="UTC"
                   fromto="to"
                   onChange={this._onChangeTo} />
       </Paper>
