@@ -75,6 +75,7 @@ var TimeCard = React.createClass({
     this.props.onChange(e, ndt);
   },
   _onChangeTime: function(e, v) {
+    console.log('TimeCard::_onChangeTime() - ' + e + ' / ' + v);
     var t = this.state.time;
     t.setHours(v.getHours());
     t.setMinutes(v.getMinutes());
@@ -82,27 +83,44 @@ var TimeCard = React.createClass({
     this.setState({time: t});
 
     var ndt = this.normalizeDateTime(t);
+    console.log('TimeCard::_onChangeTime() - ' + ndt);
 
     this.props.onChange(e, ndt);
   },
   _onChangeTZ: function(v) {
     var changeTZ = v.target.value;
-    if (_.contains(moment.tz.names(), changeTZ) && (changeTZ !== this.state.tz)) {
+    if (_.contains(moment.tz.names(), changeTZ)) {
       console.log('Timecard::onChangeTZ() - Hit! = ' + changeTZ + ' <- ' + this.state.tz);
-      console.log('Timecard::onChangeTZ() - ' + this.state.time + ' / ' + this.state.time.getTimezoneOffset());
 
-      var utcTime = new Date(this.state.time.getTime() + (this.state.time.getTimezoneOffset() * 60 * 1000));
-      console.log('Timecard::onChangeTZ() - utcTime = ' + utcTime);
+      var beforeTime = moment.tz(this.state.time, this.state.tz);
+      console.log('Timecard::onChangeTZ() - before Time = ' + this.state.time);
+      console.log('Timecard::onChangeTZ() - before = ' + beforeTime.zoneName());
+      console.log('Timecard::onChangeTZ() - before = ' + beforeTime.format());
+      console.log('Timecard::onChangeTZ() - before = ' + beforeTime.utcOffset());
+      console.log('Timecard::onChangeTZ() - before = ' + beforeTime.toDate());
+      var offset = beforeTime.utcOffset();
 
-      var tzTime = moment.tz(utcTime, changeTZ);
-      console.log('Timecard::onChangeTZ() - tzTime = ' + tzTime.format());
+      var afterTime = beforeTime.tz(changeTZ);
+      console.log('Timecard::onChangeTZ() - after = ' + afterTime.zoneName());
+      console.log('Timecard::onChangeTZ() - after = ' + afterTime.format());
+      console.log('Timecard::onChangeTZ() - after = ' + afterTime.utcOffset());
+      console.log('Timecard::onChangeTZ() - after = ' + afterTime.toDate());
+
+      var changeTime = null;
+      if (offset < afterTime.utcOffset()) {
+        changeTime = new Date(afterTime.toDate().getTime() + ((afterTime.utcOffset() - offset) * 60 * 1000));
+      } else {
+        changeTime = new Date(afterTime.toDate().getTime() - ((offset - afterTime.utcOffset()) * 60 * 1000));
+      }
+
+      console.log('Timecard::onChangeTZ() - changeTime = ' + changeTime);
 
       this.setState({
         tz: changeTZ,
-        time: tzTime.toDate()
+        time: changeTime
       });
-      this.refs.datepicker.setDate(tzTime.toDate());
-      this.refs.timepicker.setTime(tzTime.toDate());
+      this.refs.datepicker.setDate(changeTime);
+      this.refs.timepicker.setTime(changeTime);
     }
   },
   styles: {
