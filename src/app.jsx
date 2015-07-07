@@ -50,8 +50,7 @@ function browserLanguage() {
 var App = React.createClass({
   getInitialState: function() {
     return {
-      fromTime: new Date(),
-      toTime: new Date()
+      basetime: new Date()
     };
   },
   childContextTypes: {
@@ -87,7 +86,8 @@ var App = React.createClass({
       <Paper style={this.styles.card} zDepth={1}>
         <TimeCard ref="timecardFrom"
                   lang={lang}
-                  initial_tz="UTC"
+                  initialTz={tz.name()}
+                  initialTime={this.state.basetime}
                   onChange={this._onChangeFrom} />
         <div style={this.styles.toggle_wrap}>
           <Toggle ref="toggleTimeformat"
@@ -97,7 +97,8 @@ var App = React.createClass({
         </div>
         <TimeCard ref="timecardTo"
                   lang={lang}
-                  initial_tz={tz.name()}
+                  initialTz="UTC"
+                  initialTime={this.state.basetime}
                   onChange={this._onChangeTo} />
       </Paper>
     );

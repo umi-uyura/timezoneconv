@@ -17,7 +17,7 @@ var TimeCard = React.createClass({
       fromto: 'from',
       initialTime: new Date(),
       lang: 'en',
-      initial_tz: 'UTC',
+      initialTz: 'UTC',
       tz_items: []
     };
   },
@@ -25,16 +25,16 @@ var TimeCard = React.createClass({
     fromto: React.PropTypes.string.isRequired,
     initialTime: React.PropTypes.object,
     lang: React.PropTypes.string,
-    initial_tz: React.PropTypes.string,
+    initialTz: React.PropTypes.string,
     tz_items: React.PropTypes.array,
     onChange: React.PropTypes.func.isRequired
   },
   getInitialState: function() {
-    var dispTime = this.calcDispTime(this.props.initialTime, this.props.initial_tz);
+    var dispTime = this.calcDispTime(this.props.initialTime, this.props.initialTz);
 
     return {
       time: dispTime,
-      tz: this.props.initial_tz
+      tz: this.props.initialTz
     };
   },
   componentWillMount: function() {
@@ -86,18 +86,19 @@ var TimeCard = React.createClass({
     this.props.onChange(e, ndt);
   },
   _onChangeTZ: function(v) {
-    if (_.contains(moment.tz.names(), v.target.value)) {
-      console.log('Timecard::onChangeTZ() - Hit! = ' + v.target.value + ' <- ' + this.state.tz);
+    var changeTZ = v.target.value;
+    if (_.contains(moment.tz.names(), changeTZ) && (changeTZ !== this.state.tz)) {
+      console.log('Timecard::onChangeTZ() - Hit! = ' + changeTZ + ' <- ' + this.state.tz);
       console.log('Timecard::onChangeTZ() - ' + this.state.time + ' / ' + this.state.time.getTimezoneOffset());
 
-      var utcTime = new Date(this.state.time.getTime() - (this.state.time.getTimezoneOffset() * 60 * 1000));
+      var utcTime = new Date(this.state.time.getTime() + (this.state.time.getTimezoneOffset() * 60 * 1000));
       console.log('Timecard::onChangeTZ() - utcTime = ' + utcTime);
 
-      var tzTime = moment.tz(utcTime, v.target.value);
+      var tzTime = moment.tz(utcTime, changeTZ);
       console.log('Timecard::onChangeTZ() - tzTime = ' + tzTime.format());
 
       this.setState({
-        tz: v.target.value,
+        tz: changeTZ,
         time: tzTime.toDate()
       });
       this.refs.datepicker.setDate(tzTime.toDate());
@@ -135,7 +136,7 @@ var TimeCard = React.createClass({
                         onChange={this._onChangeTime} />
         <TextField ref="tzfield"
                    style={this.styles.textfield}
-                   defaultValue={this.props.initial_tz}
+                   defaultValue={this.props.initialTz}
                    onChange={this._onChangeTZ} />
       </Paper>
     );
