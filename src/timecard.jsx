@@ -44,7 +44,10 @@ var TimeCard = React.createClass({
     var tzTime = moment.tz(t, tz);
     var baseOffset = t.getTimezoneOffset();
     var localOffset = tzTime.utcOffset() + baseOffset;
-    var dispTime = new Date(t.getTime() + (localOffset * 60 * 1000));
+    var calcTime = (tzTime.utcOffset() < localOffset) ?
+                   t.getTime() - (localOffset * 60 * 1000) :
+                   t.getTime() + (localOffset * 60 * 1000);
+    var dispTime = new Date(calcTime);
     return dispTime;
   },
   setTimeFormat: function(format) {
@@ -59,7 +62,10 @@ var TimeCard = React.createClass({
   normalizeDateTime: function(dt) {
     var tzTime = moment.tz(dt, this.state.tz);
     var baseOffset = dt.getTimezoneOffset() + tzTime.utcOffset();
-    var normalizeTime = new Date(dt.getTime() - (baseOffset * 60 * 1000));
+    var calcTime = (tzTime.utcOffset() < dt.getTimezoneOffset()) ?
+                   dt.getTime() - (baseOffset * 60 * 1000) :
+                   dt.getTime() + (baseOffset * 60 * 1000);
+    var normalizeTime = new Date(calcTime);
     return normalizeTime;
   },
   _onChangeDate: function(e, v) {
