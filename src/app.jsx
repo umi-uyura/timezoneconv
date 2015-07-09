@@ -24,19 +24,14 @@ console.log('Moment.js: ' + moment.locale());
 var tz = tzdetect.jstz.determine();
 console.log('Timezone detect: ' + tz.name());
 
-/* var tzv = moment.tz('America/Toronto');
-   console.log('tzv');
-   console.log(tzv);
-   console.log(tzv.format()); */
-
-// TODO: tzの検証、存在しない場合はUTCにする
-
-/* console.log(moment.tz._names); */
+var tz_name = tz.name();
+if (!_.contains(moment.tz.names(), tz_name)) {
+  tz_name = 'UTC';
+}
 
 var tzitems = _.map(moment.tz.names(), function(v) {
   return { payload: v, text: v };
 });
-
 
 function browserLanguage() {
   try {
@@ -51,7 +46,7 @@ var App = React.createClass({
   getInitialState: function() {
     return {
       basetime: new Date(),
-      tz1: tz.name(),
+      tz1: tz_name,
       tz2: 'UTC'
     };
   },
@@ -88,7 +83,7 @@ var App = React.createClass({
       <Paper style={this.styles.card} zDepth={1}>
         <TimeCard ref="timecardFrom"
                   lang={lang}
-                  initialTz="UTC"
+                  initialTz={this.state.tz1}
                   initialTime={this.state.basetime}
                   onChange={this._onChangeFrom} />
         <div style={this.styles.toggle_wrap}>
@@ -99,7 +94,7 @@ var App = React.createClass({
         </div>
         <TimeCard ref="timecardTo"
                   lang={lang}
-                  initialTz={this.state.tz1}
+                  initialTz="UTC"
                   initialTime={this.state.basetime}
                   onChange={this._onChangeTo} />
       </Paper>
