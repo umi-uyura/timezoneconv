@@ -20,8 +20,8 @@
   "devDependencies": {
     "babelify": "^6.1.2",
     "beefy": "sberan/beefy#fix-live-reload-reliability",
-    "browserify": "^10.2.4",
-    "material-ui": "^0.9.2",
+    "browserify": "^10.2.6",
+    "material-ui": "^0.10.0",
     "react": "^0.13.3",
     "react-tap-event-plugin": "^0.1.7",
     "watchify": "^3.2.3"
