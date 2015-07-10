@@ -5,6 +5,7 @@ var mui = require('material-ui');
 var moment = require('moment-timezone');
 require('moment/min/locales');
 var _ = require('underscore');
+var tzutil = require('../lib/timezoneutil');
 
 var Paper = mui.Paper;
 var TextField = mui.TextField;
@@ -30,7 +31,7 @@ var TimeCard = React.createClass({
     onChange: React.PropTypes.func.isRequired
   },
   getInitialState: function() {
-    var dispTime = this.calcDispTime(this.props.initialTime, this.props.initialTz);
+    var dispTime = tzutil.shiftToTz(this.props.initialTime, this.props.initialTz);
 
     return {
       time: dispTime,
@@ -40,33 +41,20 @@ var TimeCard = React.createClass({
   componentWillMount: function() {
     moment.locale(this.props.lang);
   },
-  calcDispTime: function(t, tz) {
-    var tzTime = moment.tz(t, tz);
-    var baseOffset = t.getTimezoneOffset();
-    var localOffset = tzTime.utcOffset() + baseOffset;
-    var calcTime = (tzTime.utcOffset() < localOffset) ?
-                   t.getTime() - (localOffset * 60 * 1000) :
-                   t.getTime() + (localOffset * 60 * 1000);
-    var dispTime = new Date(calcTime);
-    return dispTime;
+  componentWillUpdate: function(nextProps, nextState) {
+    console.log('TimeCard::componentWillUpdate = ' + nextProps + ' / ' + nextState);
   },
   setTimeFormat: function(format) {
     this.refs.timepicker.setState({ format24hr: (format === '24hr') });
   },
   setDateTime: function(dt) {
-    var mm = this.calcDispTime(dt, this.state.tz);
+    console.log('TimeCard::setDateTime() set - ' + dt);
+    var mm = tzutil.shiftToTz(dt, this.state.tz);
+
+    console.log('TimeCard::setDateTime() disp - ' + mm);
 
     this.refs.datepicker.setDate(mm);
     this.refs.timepicker.setTime(mm);
-  },
-  normalizeDateTime: function(dt) {
-    var tzTime = moment.tz(dt, this.state.tz);
-    var baseOffset = dt.getTimezoneOffset() + tzTime.utcOffset();
-    var calcTime = (tzTime.utcOffset() < dt.getTimezoneOffset()) ?
-                   dt.getTime() - (baseOffset * 60 * 1000) :
-                   dt.getTime() + (baseOffset * 60 * 1000);
-    var normalizeTime = new Date(calcTime);
-    return normalizeTime;
   },
   _onChangeDate: function(e, v) {
     var t = this.state.time;
@@ -76,20 +64,21 @@ var TimeCard = React.createClass({
 
     this.setState({time: t});
 
-    var ndt = this.normalizeDateTime(t);
+    var ndt = tzutil.shiftFromTz(t, this.state.tz);
 
     this.props.onChange(e, ndt);
   },
   _onChangeTime: function(e, v) {
-    console.log('TimeCard::_onChangeTime() - ' + e + ' / ' + v);
+    console.log('TimeCard::_onChangeTime() - ' + this.state.time + ' / ' + this.state.tz);
+    console.log('TimeCard::_onChangeTime() input - ' + e + ' / ' + v);
     var t = this.state.time;
     t.setHours(v.getHours());
     t.setMinutes(v.getMinutes());
 
     this.setState({time: t});
 
-    var ndt = this.normalizeDateTime(t);
-    console.log('TimeCard::_onChangeTime() - ' + ndt);
+    var ndt = tzutil.shiftFromTz(t, this.state.tz);
+    console.log('TimeCard::_onChangeTime() shift - ' + ndt);
 
     this.props.onChange(e, ndt);
   },
