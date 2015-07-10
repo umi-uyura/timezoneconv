@@ -41,9 +41,6 @@ var TimeCard = React.createClass({
   componentWillMount: function() {
     moment.locale(this.props.lang);
   },
-  componentWillUpdate: function(nextProps, nextState) {
-    console.log('TimeCard::componentWillUpdate = ' + nextProps + ' / ' + nextState);
-  },
   setTimeFormat: function(format) {
     this.refs.timepicker.setState({ format24hr: (format === '24hr') });
   },
