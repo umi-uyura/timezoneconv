@@ -50,6 +50,8 @@ var TimeCard = React.createClass({
 
     console.log('TimeCard::setDateTime() disp - ' + mm);
 
+    this.setState({time: dt});
+
     this.refs.datepicker.setDate(mm);
     this.refs.timepicker.setTime(mm);
   },
