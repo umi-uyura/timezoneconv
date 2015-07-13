@@ -14,6 +14,7 @@ var ThemeManager = new mui.Styles.ThemeManager();
 var Paper = mui.Paper;
 var Toggle = mui.Toggle;
 var TimeCard = require('./timecard.jsx');
+var AppBar = mui.AppBar;
 
 var lang = browserLanguage();
 console.log('Browser launguage: ' + lang);
@@ -72,7 +73,8 @@ var App = React.createClass({
   },
   styles: {
     card: {
-      padding: '12px'
+      padding: '8px',
+      margin: '0 auto'
     },
     toggle_wrap: {
       textAlign: 'right'
@@ -80,24 +82,27 @@ var App = React.createClass({
   },
   render: function() {
     return (
-      <Paper style={this.styles.card} zDepth={1}>
-        <TimeCard ref="timecardFrom"
-                  lang={lang}
-                  initialTz={this.state.tz1}
-                  initialTime={this.state.basetime}
-                  onChange={this._onChangeFrom} />
-        <div style={this.styles.toggle_wrap}>
-          <Toggle ref="toggleTimeformat"
-                  label="24時間表示"
-                  defaultToggled={true}
-                  onToggle={this._onToggle} />
-        </div>
-        <TimeCard ref="timecardTo"
-                  lang={lang}
-                  initialTz="UTC"
-                  initialTime={this.state.basetime}
-                  onChange={this._onChangeTo} />
-      </Paper>
+      <div>
+        <AppBar title="Timezone Converter" showMenuIconButton={false} />
+        <Paper style={this.styles.card} zDepth={1}>
+          <TimeCard ref="timecardFrom"
+                    lang={lang}
+                    initialTz={this.state.tz1}
+                    initialTime={this.state.basetime}
+                    onChange={this._onChangeFrom} />
+          <div style={this.styles.toggle_wrap}>
+            <Toggle ref="toggleTimeformat"
+                    label="24時間表示"
+                    defaultToggled={true}
+                    onToggle={this._onToggle} />
+          </div>
+          <TimeCard ref="timecardTo"
+                    lang={lang}
+                    initialTz="UTC"
+                    initialTime={this.state.basetime}
+                    onChange={this._onChangeTo} />
+        </Paper>
+      </div>
     );
   }
 });

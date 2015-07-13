@@ -104,7 +104,8 @@ var TimeCard = React.createClass({
       textAlign: 'center'
     },
     textfield: {
-      display: 'block'
+      display: 'block',
+      margin: '0 auto'
     }
   },
   formatDate: function(d) {
