@@ -86,27 +86,7 @@ var TimeCard = React.createClass({
     if (_.contains(moment.tz.names(), changeTZ)) {
       console.log('Timecard::onChangeTZ() - Hit! = ' + changeTZ + ' <- ' + this.state.tz);
 
-      var beforeTime = moment.tz(this.state.time, this.state.tz);
-      console.log('Timecard::onChangeTZ() - before Time = ' + this.state.time);
-      console.log('Timecard::onChangeTZ() - before = ' + beforeTime.zoneName());
-      console.log('Timecard::onChangeTZ() - before = ' + beforeTime.format());
-      console.log('Timecard::onChangeTZ() - before = ' + beforeTime.utcOffset());
-      console.log('Timecard::onChangeTZ() - before = ' + beforeTime.toDate());
-      var offset = beforeTime.utcOffset();
-
-      var afterTime = beforeTime.tz(changeTZ);
-      console.log('Timecard::onChangeTZ() - after = ' + afterTime.zoneName());
-      console.log('Timecard::onChangeTZ() - after = ' + afterTime.format());
-      console.log('Timecard::onChangeTZ() - after = ' + afterTime.utcOffset());
-      console.log('Timecard::onChangeTZ() - after = ' + afterTime.toDate());
-
-      var changeTime = null;
-      if (offset < afterTime.utcOffset()) {
-        changeTime = new Date(afterTime.toDate().getTime() + ((afterTime.utcOffset() - offset) * 60 * 1000));
-      } else {
-        changeTime = new Date(afterTime.toDate().getTime() - ((offset - afterTime.utcOffset()) * 60 * 1000));
-      }
-
+      var changeTime = tzutil.convertTZtoTZ(this.state.time, this.state.tz, changeTZ);
       console.log('Timecard::onChangeTZ() - changeTime = ' + changeTime);
 
       this.setState({
