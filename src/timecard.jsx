@@ -11,6 +11,7 @@ var Paper = mui.Paper;
 var TextField = mui.TextField;
 var DatePicker = mui.DatePicker;
 var DualTimePicker = require('./dualtimepicker.jsx');
+var Colors = mui.Styles.Colors;
 
 var TimeCard = React.createClass({
   getDefaultProps: function() {
@@ -103,9 +104,23 @@ var TimeCard = React.createClass({
       padding: '12px',
       textAlign: 'center'
     },
-    textfield: {
+    tzwrapper: {
+      position: 'relative',
+      width: '256px',
+      margin: '0 auto'
+    },
+    timezone: {
       display: 'block',
       margin: '0 auto'
+    },
+    dst: {
+      position: 'absolute',
+      top: '16px',
+      right: '0px',
+      padding: '0 4px',
+      fontSize: 'small',
+      color: Colors.grey400,
+      backgroundColor: 'white'
     }
   },
   formatDate: function(d) {
@@ -127,10 +142,15 @@ var TimeCard = React.createClass({
                         lang={this.props.lang}
                         disabled={disabled}
                         onChange={this._onChangeTime} />
-        <TextField ref="tzfield"
-                   style={this.styles.textfield}
-                   defaultValue={this.props.initialTz}
-                   onChange={this._onChangeTZ} />
+        <div style={this.styles.tzwrapper}>
+          <TextField ref="tzfield"
+                     style={this.styles.timezone}
+                     defaultValue={this.props.initialTz}
+                     onChange={this._onChangeTZ} />
+          <div style={this.styles.dst}>
+            夏時間
+          </div>
+        </div>
       </Paper>
     );
   }

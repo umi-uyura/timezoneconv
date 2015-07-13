@@ -7,6 +7,7 @@ require('moment/min/locales');
 
 var DatePicker = mui.DatePicker;
 var TimePicker = mui.TimePicker;
+var Colors = mui.Styles.Colors;
 
 var DualTimePicker = React.createClass({
   getDefaultProps: function() {
@@ -36,13 +37,27 @@ var DualTimePicker = React.createClass({
     this.refs.pickerAMPM.setTime(t);
     this.setState({time: t});
   },
+  styles: {
+    wrapper: {
+      position: 'relative',
+      width: '256px',
+      margin: '0 auto'
+    },
+    offset: {
+      position: 'absolute',
+      top: '16px',
+      right: '0px',
+      fontSize: 'small',
+      color: Colors.grey400
+    }
+  },
   render: function() {
     var format = this.state.format24hr ? '24hr' : 'ampm';
     var styleVisible = {};
     var styleHide = { display: 'none' };
 
     return (
-      <div>
+      <div style={this.styles.wrapper}>
         <TimePicker ref="picker24HR"
                     style={this.state.format24hr ? styleVisible : styleHide }
                     format="24hr"
@@ -55,6 +70,9 @@ var DualTimePicker = React.createClass({
                     disabled={this.props.disabled}
                     onChange={this._onChange}
                     defaultTime={this.state.time} />
+        <div style={this.styles.offset}>
+          UTC +99:00
+        </div>
       </div>
     );
   }
