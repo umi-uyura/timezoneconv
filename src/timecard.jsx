@@ -32,11 +32,13 @@ var TimeCard = React.createClass({
     onChange: React.PropTypes.func.isRequired
   },
   getInitialState: function() {
-    var dispTime = tzutil.shiftToTz(this.props.initialTime, this.props.initialTz);
+    var info = tzutil.shiftToTzInfo(this.props.initialTime, this.props.initialTz);
 
     return {
-      time: dispTime,
-      tz: this.props.initialTz
+      time: info.time,
+      tz: this.props.initialTz,
+      utcOffset: info.utcOffset,
+      isDst: info.isDst
     };
   },
   componentWillMount: function() {
@@ -47,14 +49,18 @@ var TimeCard = React.createClass({
   },
   setDateTime: function(dt) {
     console.log('TimeCard::setDateTime() set - ' + dt);
-    var mm = tzutil.shiftToTz(dt, this.state.tz);
+    var info = tzutil.shiftToTzInfo(dt, this.state.tz);
 
-    console.log('TimeCard::setDateTime() disp - ' + mm);
+    console.log('TimeCard::setDateTime() disp - ' + info.time);
 
-    this.setState({time: dt});
+    this.setState({
+      time: dt,
+      utcOffset: info.utcOffset,
+      isDST: info.isDST
+    });
 
-    this.refs.datepicker.setDate(mm);
-    this.refs.timepicker.setTime(mm);
+    this.refs.datepicker.setDate(info.time);
+    this.refs.timepicker.setTime(info.time);
   },
   _onChangeDate: function(e, v) {
     var t = this.state.time;
@@ -87,21 +93,23 @@ var TimeCard = React.createClass({
     if (_.contains(moment.tz.names(), changeTZ)) {
       console.log('Timecard::onChangeTZ() - Hit! = ' + changeTZ + ' <- ' + this.state.tz);
 
-      var changeTime = tzutil.convertTZtoTZ(this.state.time, this.state.tz, changeTZ);
-      console.log('Timecard::onChangeTZ() - changeTime = ' + changeTime);
+      var changeTime = tzutil.convertTZtoTZInfo(this.state.time, this.state.tz, changeTZ);
+      console.log('Timecard::onChangeTZ() - changeTime = ' + changeTime.time + ' / ' + changeTime.utcOffset + ' / ' + changeTime.isDST);
 
       this.setState({
         tz: changeTZ,
-        time: changeTime
+        time: changeTime.time,
+        utcOffset: changeTime.utcOffset,
+        isDST: changeTime.isDST
       });
-      this.refs.datepicker.setDate(changeTime);
-      this.refs.timepicker.setTime(changeTime);
+      this.refs.datepicker.setDate(changeTime.time);
+      this.refs.timepicker.setTime(changeTime.time, changeTime.utcOffset);
     }
   },
   styles: {
     card: {
-      margin: '12px',
-      padding: '12px',
+      margin: '8px',
+      padding: '8px',
       textAlign: 'center'
     },
     tzwrapper: {
@@ -139,6 +147,7 @@ var TimeCard = React.createClass({
                     onChange={this._onChangeDate} />
         <DualTimePicker ref="timepicker"
                         initialTime={this.state.time}
+                        initialUtcOffset={this.state.utcOffset}
                         lang={this.props.lang}
                         disabled={disabled}
                         onChange={this._onChangeTime} />
@@ -148,7 +157,7 @@ var TimeCard = React.createClass({
                      defaultValue={this.props.initialTz}
                      onChange={this._onChangeTZ} />
           <div style={this.styles.dst}>
-            夏時間
+            { this.state.isDST ? '夏時間' : '' }
           </div>
         </div>
       </Paper>

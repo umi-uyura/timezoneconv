@@ -13,13 +13,15 @@ var DualTimePicker = React.createClass({
   getDefaultProps: function() {
     return {
       initialTime: new Date(),
+      initialUtcOffset: 0,
       lang: 'en'
     };
   },
   getInitialState: function() {
     return {
       format24hr: true,
-      time: this.props.initialTime
+      time: this.props.initialTime,
+      utcOffset: this.props.initialUtcOffset
     };
   },
   componentWillMount: function() {
@@ -32,10 +34,13 @@ var DualTimePicker = React.createClass({
   getTime: function() {
     return this.state.time;
   },
-  setTime: function(t) {
+  setTime: function(t, offset) {
     this.refs.picker24HR.setTime(t);
     this.refs.pickerAMPM.setTime(t);
-    this.setState({time: t});
+    this.setState({
+      time: t,
+      utcOffset: offset
+    });
   },
   styles: {
     wrapper: {
@@ -50,6 +55,13 @@ var DualTimePicker = React.createClass({
       fontSize: 'small',
       color: Colors.grey400
     }
+  },
+  formatUtcOffset: function(offset) {
+    var hours = offset / 60;
+    var minutes = Math.abs(offset % 60);
+    var plus = (0 <= hours) ? '+' : '';
+
+    return 'UTC ' + plus + hours + ':' + ((minutes + '0').substr(0, 2));
   },
   render: function() {
     var format = this.state.format24hr ? '24hr' : 'ampm';
@@ -71,7 +83,7 @@ var DualTimePicker = React.createClass({
                     onChange={this._onChange}
                     defaultTime={this.state.time} />
         <div style={this.styles.offset}>
-          UTC +99:00
+          {this.formatUtcOffset(this.state.utcOffset)}
         </div>
       </div>
     );
