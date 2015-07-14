@@ -60,7 +60,7 @@ var TimeCard = React.createClass({
     });
 
     this.refs.datepicker.setDate(info.time);
-    this.refs.timepicker.setTime(info.time);
+    this.refs.timepicker.setTime(info.time, info.utcOffset);
   },
   _onChangeDate: function(e, v) {
     var t = this.state.time;
@@ -68,9 +68,16 @@ var TimeCard = React.createClass({
     t.setMonth(v.getMonth());
     t.setDate(v.getDate());
 
-    this.setState({time: t});
-
     var ndt = tzutil.shiftFromTz(t, this.state.tz);
+    var info = tzutil.shiftToTzInfo(ndt, this.state.tz);
+
+    this.setState({
+      time: ndt,
+      utcOffset: info.utcOffset,
+      isDST: info.isDST
+    });
+
+    this.refs.timepicker.setTime(info.time, info.utcOffset);
 
     this.props.onChange(e, ndt);
   },
