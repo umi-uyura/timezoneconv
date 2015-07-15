@@ -83,7 +83,7 @@ var App = React.createClass({
   render: function() {
     return (
       <div>
-        <AppBar title="Timezone Converter" showMenuIconButton={false} />
+        <AppBar title="TimezoneConv" showMenuIconButton={false} />
         <Paper style={this.styles.card} zDepth={1}>
           <TimeCard ref="timecardFrom"
                     lang={lang}
