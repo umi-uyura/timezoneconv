@@ -19,13 +19,13 @@ var d = new Date();
 // tzutil.shiftToTz(d, 'UTC');
 // tzutil.shiftToTz(d, 'Asia/Tokyo');
 
-tzutil.shiftFromTz(new Date('Thu Jul 09 2015 17:03:05 GMT+0900'), 'Asia/Shanghai');
-tzutil.shiftFromTz(new Date('Thu Jul 09 2015 19:03:05 GMT+0900'), 'Asia/Sakhalin');
-tzutil.shiftFromTz(new Date('Thu Jul 09 2015 02:03:05 GMT+0900'), 'America/Los_Angeles');
-tzutil.shiftFromTz(new Date('Thu Jul 09 2015 10:03:05 GMT+0900'), 'Europe/Dublin');
-tzutil.shiftFromTz(new Date('Wed Jul 08 2015 23:03:05 GMT+0900'), 'Pacific/Honolulu');
-tzutil.shiftFromTz(new Date('Thu Jul 09 2015 09:03:05 GMT+0900'), 'UTC');
-tzutil.shiftFromTz(new Date('Thu Jul 09 2015 18:03:05 GMT+0900'), 'Asia/Tokyo');
+// tzutil.shiftFromTz(new Date('Thu Jul 09 2015 17:03:05 GMT+0900'), 'Asia/Shanghai');
+// tzutil.shiftFromTz(new Date('Thu Jul 09 2015 19:03:05 GMT+0900'), 'Asia/Sakhalin');
+// tzutil.shiftFromTz(new Date('Thu Jul 09 2015 02:03:05 GMT+0900'), 'America/Los_Angeles');
+// tzutil.shiftFromTz(new Date('Thu Jul 09 2015 10:03:05 GMT+0900'), 'Europe/Dublin');
+// tzutil.shiftFromTz(new Date('Wed Jul 08 2015 23:03:05 GMT+0900'), 'Pacific/Honolulu');
+// tzutil.shiftFromTz(new Date('Thu Jul 09 2015 09:03:05 GMT+0900'), 'UTC');
+// tzutil.shiftFromTz(new Date('Thu Jul 09 2015 18:03:05 GMT+0900'), 'Asia/Tokyo');
 
 // tzutil.convertTZtoTZ(d, 'Asia/Shanghai', 'Asia/Sakhalin');
 // tzutil.convertTZtoTZ(d, 'Asia/Sakhalin', 'Asia/Shanghai');
@@ -33,3 +33,6 @@ tzutil.shiftFromTz(new Date('Thu Jul 09 2015 18:03:05 GMT+0900'), 'Asia/Tokyo');
 // tzutil.convertTZtoTZ(d, 'America/Los_Angeles', 'Asia/Shanghai');
 // tzutil.convertTZtoTZ(d, 'Asia/Tokyo', 'UTC');
 // tzutil.convertTZtoTZ(d, 'UTC', 'Asia/Tokyo');
+
+var tzjson = require('node_modules/moment-timezone/data/unpacked/latest.json');
+tzutil.loadAbbrs(tzjson);
