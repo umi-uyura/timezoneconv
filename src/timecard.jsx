@@ -5,7 +5,7 @@ var mui = require('material-ui');
 var moment = require('moment-timezone');
 require('moment/min/locales');
 var _ = require('underscore');
-var tzutil = require('../lib/timezoneutil');
+var tzutil = require('../lib/timezone-util');
 
 var Paper = mui.Paper;
 var TextField = mui.TextField;
