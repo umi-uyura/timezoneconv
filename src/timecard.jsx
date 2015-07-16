@@ -108,6 +108,12 @@ var TimeCard = React.createClass({
       var changeTime = tzutil.convertTZtoTZInfo(this.state.time, this.state.tz, changeTZ);
       console.log('Timecard::onChangeTZ() - changeTime = ' + changeTime.time + ' / ' + changeTime.utcOffset + ' / ' + changeTime.isDST);
 
+      changeTime.time.setFullYear(this.state.time.getFullYear());
+      changeTime.time.setMonth(this.state.time.getMonth());
+      changeTime.time.setDate(this.state.time.getDate());
+      changeTime.time.setHours(this.state.time.getHours());
+      changeTime.time.setMinutes(this.state.time.getMinutes());
+
       this.setState({
         tz: changeTZ,
         time: changeTime.time,
@@ -116,6 +122,9 @@ var TimeCard = React.createClass({
       });
       this.refs.datepicker.setDate(changeTime.time);
       this.refs.timepicker.setTime(changeTime.time, changeTime.utcOffset);
+      var ndt = tzutil.shiftFromTz(changeTime.time, changeTZ);
+
+      this.props.onChange(null, ndt);
     }
   },
   styles: {
