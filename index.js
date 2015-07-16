@@ -1,6 +1,6 @@
 'use strict';
 
-var tzutil = require('lib/timezoneutil');
+var tzutil = require('lib/timezone-util');
 var abbrTz = require('lib/timezone-abbrs');
 var _ = require('underscore');
 
@@ -36,8 +36,9 @@ var d = new Date();
 // tzutil.convertTZtoTZ(d, 'Asia/Tokyo', 'UTC');
 // tzutil.convertTZtoTZ(d, 'UTC', 'Asia/Tokyo');
 
-var tzjson = require('node_modules/moment-timezone/data/unpacked/latest.json');
-var tzs = abbrTz.loadAbbrs(tzjson);
+// var tzjson = require('node_modules/moment-timezone/data/unpacked/latest.json');
+// var tzs = abbrTz.loadAbbrs(tzjson);
+var tzs = abbrTz.abbrs();
 
 console.log(Object.keys(tzs).length);
 
