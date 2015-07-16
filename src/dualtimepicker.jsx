@@ -35,7 +35,9 @@ var DualTimePicker = React.createClass({
     return this.state.time;
   },
   setTime: function(t, offset) {
-    offset = offset || this.state.utcOffset;
+    if (undefined === offset) {
+      offset = this.state.utcOffset;
+    }
     this.refs.picker24HR.setTime(t);
     this.refs.pickerAMPM.setTime(t);
     this.setState({
