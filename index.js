@@ -1,6 +1,8 @@
 'use strict';
 
 var tzutil = require('lib/timezoneutil');
+var abbrTz = require('lib/timezone-abbrs');
+var _ = require('underscore');
 
 // Pacific/Honolulu -10:00
 // America/Los_Angeles -8:00
@@ -35,4 +37,26 @@ var d = new Date();
 // tzutil.convertTZtoTZ(d, 'UTC', 'Asia/Tokyo');
 
 var tzjson = require('node_modules/moment-timezone/data/unpacked/latest.json');
-tzutil.loadAbbrs(tzjson);
+var tzs = abbrTz.loadAbbrs(tzjson);
+
+console.log(Object.keys(tzs).length);
+
+// _.each(tzs, function(tz) {
+//   console.log(tz.abbr);
+//   _.each(tz.offsets, function(offset) {
+//     console.log('--- ' + offset.offset + ' / ' + offset.names.join(','));
+//   });
+// });
+
+var tzAbbrs = _.filter(tzs.list, function(data) {
+  return (1 === data.offsets.length);
+});
+
+console.log('tzAbbrs.length = ' + tzAbbrs.length);
+
+_.each(tzAbbrs, function(tz) {
+  console.log(tz.abbr);
+  _.each(tz.offsets, function(offset) {
+    console.log('--- ' + offset.offset + ' / ' + offset.names.join(','));
+  });
+});
