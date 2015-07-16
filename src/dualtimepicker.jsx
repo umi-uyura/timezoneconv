@@ -62,9 +62,9 @@ var DualTimePicker = React.createClass({
   formatUtcOffset: function(offset) {
     var hours = Math.floor(offset / 60);
     var minutes = (Math.abs(offset % 60) + '0').substr(0, 2);
-    var plus = (0 <= hours) ? '+' : '';
+    var sign = (0 <= hours) ? '+' : '';
 
-    return 'UTC ' + plus + hours + ':' + minutes;
+    return 'UTC ' + sign + hours + ':' + minutes;
   },
   render: function() {
     var format = this.state.format24hr ? '24hr' : 'ampm';
