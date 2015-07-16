@@ -88,10 +88,15 @@ var TimeCard = React.createClass({
     t.setHours(v.getHours());
     t.setMinutes(v.getMinutes());
 
-    this.setState({time: t});
-
     var ndt = tzutil.shiftFromTz(t, this.state.tz);
+    var info = tzutil.shiftToTzInfo(ndt, this.state.tz);
     console.log('TimeCard::_onChangeTime() shift - ' + ndt);
+
+    this.setState({
+      time: t,
+      utcOffset: info.utcOffset,
+      isDST: info.isDST
+    });
 
     this.props.onChange(e, ndt);
   },
