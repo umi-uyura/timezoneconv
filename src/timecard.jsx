@@ -20,7 +20,8 @@ var TimeCard = React.createClass({
       initialTime: new Date(),
       lang: 'en',
       initialTz: 'UTC',
-      tz_items: []
+      tzItems: [],
+      tzAbbrs: []
     };
   },
   propTypes: {
@@ -29,6 +30,7 @@ var TimeCard = React.createClass({
     lang: React.PropTypes.string,
     initialTz: React.PropTypes.string,
     tzItems: React.PropTypes.array,
+    tzAbbrs: React.PropTypes.array,
     onChange: React.PropTypes.func.isRequired
   },
   getInitialState: function() {

@@ -8,7 +8,7 @@ var _ = require('underscore');
 var moment = require('moment-timezone');
 require('moment/min/locales');
 var tzDetect = require('jstimezonedetect');
-var tzAbbrs = require('../lib/timezone-abbr');
+var tzAbbr = require('../lib/timezone-abbrs');
 
 var mui = require("material-ui");
 var ThemeManager = new mui.Styles.ThemeManager();
@@ -32,6 +32,7 @@ if (!_.contains(moment.tz.names(), tzName)) {
 }
 
 var tzItems = moment.tz.names();
+var tzAbbrs = tzAbbr.abbrs();
 
 function browserLanguage() {
   try {
@@ -89,6 +90,7 @@ var App = React.createClass({
                     initialTz={this.state.tz1}
                     initialTime={this.state.basetime}
                     tzItems={tzItems}
+                    tzAbbrs={tzAbbrs.list}
                     onChange={this._onChangeFrom} />
           <div style={this.styles.toggle_wrap}>
             <Toggle ref="toggleTimeformat"
@@ -101,6 +103,7 @@ var App = React.createClass({
                     initialTz="UTC"
                     initialTime={this.state.basetime}
                     tzItems={tzItems}
+                    tzAbbrs={tzAbbrs.list}
                     onChange={this._onChangeTo} />
         </Paper>
       </div>
