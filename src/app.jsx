@@ -7,7 +7,8 @@ injectTapEventPlugin();
 var _ = require('underscore');
 var moment = require('moment-timezone');
 require('moment/min/locales');
-var tzdetect = require('jstimezonedetect');
+var tzDetect = require('jstimezonedetect');
+var tzAbbrs = require('../lib/timezone-abbr');
 
 var mui = require("material-ui");
 var ThemeManager = new mui.Styles.ThemeManager();
@@ -22,7 +23,7 @@ console.log('Browser launguage: ' + lang);
 moment.locale(lang ? lang : 'en');
 console.log('Moment.js: ' + moment.locale());
 
-var tz = tzdetect.jstz.determine();
+var tz = tzDetect.jstz.determine();
 console.log('Timezone detect: ' + tz.name());
 
 var tzName = tz.name();
