@@ -28,7 +28,7 @@ var TimeCard = React.createClass({
     initialTime: React.PropTypes.object,
     lang: React.PropTypes.string,
     initialTz: React.PropTypes.string,
-    tz_items: React.PropTypes.array,
+    tzItems: React.PropTypes.array,
     onChange: React.PropTypes.func.isRequired
   },
   getInitialState: function() {
@@ -102,7 +102,7 @@ var TimeCard = React.createClass({
   },
   _onChangeTZ: function(v) {
     var changeTZ = v.target.value;
-    if (_.contains(moment.tz.names(), changeTZ)) {
+    if (_.contains(this.props.tzItems, changeTZ)) {
       console.log('Timecard::onChangeTZ() - Hit! = ' + changeTZ + ' <- ' + this.state.tz);
 
       var changeTime = tzutil.convertTZtoTZInfo(this.state.time, this.state.tz, changeTZ);

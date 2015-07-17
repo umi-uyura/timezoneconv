@@ -30,9 +30,7 @@ if (!_.contains(moment.tz.names(), tz_name)) {
   tz_name = 'UTC';
 }
 
-var tzitems = _.map(moment.tz.names(), function(v) {
-  return { payload: v, text: v };
-});
+var tzItems = moment.tz.names();
 
 function browserLanguage() {
   try {
@@ -89,6 +87,7 @@ var App = React.createClass({
                     lang={lang}
                     initialTz={this.state.tz1}
                     initialTime={this.state.basetime}
+                    tzItems={tzItems}
                     onChange={this._onChangeFrom} />
           <div style={this.styles.toggle_wrap}>
             <Toggle ref="toggleTimeformat"
@@ -100,6 +99,7 @@ var App = React.createClass({
                     lang={lang}
                     initialTz="UTC"
                     initialTime={this.state.basetime}
+                    tzItems={tzItems}
                     onChange={this._onChangeTo} />
         </Paper>
       </div>
