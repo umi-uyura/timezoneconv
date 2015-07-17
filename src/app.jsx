@@ -25,9 +25,9 @@ console.log('Moment.js: ' + moment.locale());
 var tz = tzdetect.jstz.determine();
 console.log('Timezone detect: ' + tz.name());
 
-var tz_name = tz.name();
-if (!_.contains(moment.tz.names(), tz_name)) {
-  tz_name = 'UTC';
+var tzName = tz.name();
+if (!_.contains(moment.tz.names(), tzName)) {
+  tzName = 'UTC';
 }
 
 var tzItems = moment.tz.names();
@@ -45,7 +45,7 @@ var App = React.createClass({
   getInitialState: function() {
     return {
       basetime: new Date(),
-      tz1: tz_name,
+      tz1: tzName,
       tz2: 'UTC'
     };
   },
