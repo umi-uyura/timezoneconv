@@ -127,6 +127,36 @@ var TimeCard = React.createClass({
       var ndt = tzutil.shiftFromTz(changeTime.time, changeTZ);
 
       this.props.onChange(null, ndt);
+    } else {
+      console.log(this.props.tzAbbrs);
+      var abbr = _.findWhere(this.props.tzAbbrs, {abbr: changeTZ});
+      console.log(abbr);
+      if (abbr) {
+        console.log('Timecard::onChangeTZ() - Hit! = ' + changeTZ + ' <- ' + this.state.tz);
+        console.log('Timecard::onChangeTZ() - ' + this.state.time + ' / ' + this.state.utcOffset);
+
+        var ndt2 = tzutil.shiftFromTz(this.state.time, this.state.tz);
+
+        console.log('Timecard::onChangeTZ() - ' + ndt2);
+        console.log('Timecard::onChangeTZ() - ' + abbr.offsets[0].offset);
+
+        var baseOffset = abbr.offsets[0].offset - this.state.utcOffset;
+        console.log('Timecard::onChangeTZ() - ' + baseOffset + ' (' + (baseOffset / 60) + ')');
+
+        var tzTime = new Date(ndt2.getTime() + (-1 * (baseOffset * 60 * 1000)));
+        console.log('Timecard::onChangeTZ() - ' + tzTime);
+
+        this.setState({
+          tz: changeTZ,
+          /* time: tzTime, */
+          utcOffset: abbr.offsets[0].offset
+        });
+        /* this.refs.datepicker.setDate(tzTime);
+           this.refs.timepicker.setTime(tzTime, abbr.offsets[0].offset); */
+        this.refs.timepicker.setOffset(abbr.offsets[0].offset);
+
+        this.props.onChange(null, tzTime);
+      }
     }
   },
   styles: {

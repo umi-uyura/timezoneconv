@@ -45,6 +45,11 @@ var DualTimePicker = React.createClass({
       utcOffset: offset
     });
   },
+  setOffset: function(offset) {
+    this.setState({
+      utcOffset: offset
+    });
+  },
   styles: {
     wrapper: {
       position: 'relative',

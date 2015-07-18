@@ -92,7 +92,7 @@ var App = React.createClass({
                     initialTz={this.state.tz1}
                     initialTime={this.state.basetime}
                     tzItems={tzItems}
-                    tzAbbrs={tzAbbrs.list}
+                    tzAbbrs={tzAbbrs}
                     onChange={this._onChangeFrom} />
           <div style={this.styles.toggle_wrap}>
             <Toggle ref="toggleTimeformat"
@@ -105,7 +105,7 @@ var App = React.createClass({
                     initialTz="UTC"
                     initialTime={this.state.basetime}
                     tzItems={tzItems}
-                    tzAbbrs={tzAbbrs.list}
+                    tzAbbrs={tzAbbrs}
                     onChange={this._onChangeTo} />
         </Paper>
       </div>
