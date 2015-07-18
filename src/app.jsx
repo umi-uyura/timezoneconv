@@ -32,7 +32,9 @@ if (!_.contains(moment.tz.names(), tzName)) {
 }
 
 var tzItems = moment.tz.names();
-var tzAbbrs = tzAbbr.abbrs();
+var tzAbbrs = _.filter(tzAbbr.abbrs().list, function(item) {
+  return 1 === item.offsets.length;
+});
 
 function browserLanguage() {
   try {
