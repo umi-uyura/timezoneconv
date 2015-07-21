@@ -34,7 +34,7 @@ var TimeCard = React.createClass({
     onChange: React.PropTypes.func.isRequired
   },
   getInitialState: function() {
-    var info = tzutil.shiftToTzInfo(this.props.initialTime, this.props.initialTz);
+    var info = this.shiftToTzInfo(this.props.initialTime, this.props.initialTz);
 
     return {
       time: info.time,
@@ -51,7 +51,7 @@ var TimeCard = React.createClass({
   },
   setDateTime: function(dt) {
     console.log('TimeCard::setDateTime() set - ' + dt);
-    var info = tzutil.shiftToTzInfo(dt, this.state.tz);
+    var info = this.shiftToTzInfo(dt, this.state.tz);
 
     console.log('TimeCard::setDateTime() disp - ' + info.time);
 
@@ -71,7 +71,7 @@ var TimeCard = React.createClass({
     t.setDate(v.getDate());
 
     var ndt = tzutil.shiftFromTz(t, this.state.tz);
-    var info = tzutil.shiftToTzInfo(ndt, this.state.tz);
+    var info = this.shiftToTzInfo(ndt, this.state.tz);
 
     this.setState({
       time: ndt,
@@ -91,7 +91,7 @@ var TimeCard = React.createClass({
     t.setMinutes(v.getMinutes());
 
     var ndt = tzutil.shiftFromTz(t, this.state.tz);
-    var info = tzutil.shiftToTzInfo(ndt, this.state.tz);
+    var info = this.shiftToTzInfo(ndt, this.state.tz);
     console.log('TimeCard::_onChangeTime() shift - ' + ndt);
 
     this.setState({
@@ -128,36 +128,38 @@ var TimeCard = React.createClass({
 
       this.props.onChange(null, ndt);
     } else {
-      console.log(this.props.tzAbbrs);
       var abbr = _.findWhere(this.props.tzAbbrs, {abbr: changeTZ});
-      console.log(abbr);
       if (abbr) {
-        console.log('Timecard::onChangeTZ() - Hit! = ' + changeTZ + ' <- ' + this.state.tz);
-        console.log('Timecard::onChangeTZ() - ' + this.state.time + ' / ' + this.state.utcOffset);
+        console.log('Timecard::onChangeTZ() (abbr) - Hit! = ' + changeTZ + ' <- ' + this.state.tz);
+        console.log('Timecard::onChangeTZ() (abbr) - ' + this.state.time + ' / ' + this.state.utcOffset);
 
         var ndt2 = tzutil.shiftFromTz(this.state.time, this.state.tz);
-
-        console.log('Timecard::onChangeTZ() - ' + ndt2);
-        console.log('Timecard::onChangeTZ() - ' + abbr.offsets[0].offset);
-
-        var baseOffset = abbr.offsets[0].offset - this.state.utcOffset;
-        console.log('Timecard::onChangeTZ() - ' + baseOffset + ' (' + (baseOffset / 60) + ')');
-
-        var tzTime = new Date(ndt2.getTime() + (-1 * (baseOffset * 60 * 1000)));
-        console.log('Timecard::onChangeTZ() - ' + tzTime);
+        var tzTime = tzutil.convertOffsetToOffset(this.state.time,
+                                                  tzutil.canonicalizeJsDateOffseet(this.state.time.getTimezoneOffset()),
+                                                  abbr.offsets[0].offset);
 
         this.setState({
           tz: changeTZ,
-          /* time: tzTime, */
           utcOffset: abbr.offsets[0].offset
         });
-        /* this.refs.datepicker.setDate(tzTime);
-           this.refs.timepicker.setTime(tzTime, abbr.offsets[0].offset); */
         this.refs.timepicker.setOffset(abbr.offsets[0].offset);
 
         this.props.onChange(null, tzTime);
       }
     }
+  },
+  shiftToTzInfo: function(localTime, tz) {
+    var info = _.findWhere(this.props.tzAbbrs, {abbr: tz});
+    if (info) {
+      info.time = tzutil.convertOffsetToOffset(localTime,
+                                               tzutil.canonicalizeJsDateOffseet(localTime.getTimezoneOffset()),
+                                               info.offsets[0].offset);
+      info.utcOffset = info.offsets[0].offset;
+      info.isDST = info.abbr.endsWith('DT');
+    } else {
+      info = tzutil.shiftToTzInfo(localTime, tz);
+    }
+    return info;
   },
   styles: {
     card: {
