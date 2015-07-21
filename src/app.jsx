@@ -33,7 +33,7 @@ if (!_.contains(moment.tz.names(), tzName)) {
 
 var tzItems = moment.tz.names();
 var tzAbbrs = _.filter(tzAbbr.abbrs().list, function(item) {
-  return 1 === item.offsets.length;
+  return (1 === item.offsets.length && 'UTC' !== item.abbr);
 });
 
 function browserLanguage() {
