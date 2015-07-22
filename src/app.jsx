@@ -83,11 +83,13 @@ var App = React.createClass({
     }
   },
   render: function() {
+    console.log('App::render()');
     return (
       <div>
         <AppBar title="TimezoneConv" showMenuIconButton={false} />
         <Paper style={this.styles.card} zDepth={1}>
           <TimeCard ref="timecardFrom"
+                    fromto="from"
                     lang={lang}
                     initialTz={this.state.tz1}
                     initialTime={this.state.basetime}
@@ -101,6 +103,7 @@ var App = React.createClass({
                     onToggle={this._onToggle} />
           </div>
           <TimeCard ref="timecardTo"
+                    fromto="to"
                     lang={lang}
                     initialTz="UTC"
                     initialTime={this.state.basetime}

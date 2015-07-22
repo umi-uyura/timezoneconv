@@ -50,10 +50,10 @@ var TimeCard = React.createClass({
     this.refs.timepicker.setState({ format24hr: (format === '24hr') });
   },
   setDateTime: function(dt) {
-    console.log('TimeCard::setDateTime() set - ' + dt);
+    console.log('TimeCard::setDateTime() ' + this.props.fromto + ' set - ' + dt + ' / ' + this.state.tz);
     var info = this.shiftToTzInfo(dt, this.state.tz);
 
-    console.log('TimeCard::setDateTime() disp - ' + info.time);
+    console.log('TimeCard::setDateTime() ' + this.props.fromto + ' disp - ' + info.time);
 
     this.setState({
       time: dt,
@@ -61,6 +61,7 @@ var TimeCard = React.createClass({
       isDST: info.isDST
     });
 
+    console.log('TimeCard::setDateTime() -> DatePicker::setDate() - ' + this.props.fromto + ' / ' + info.time);
     this.refs.datepicker.setDate(info.time);
     this.refs.timepicker.setTime(info.time, info.utcOffset);
   },
@@ -70,7 +71,8 @@ var TimeCard = React.createClass({
     t.setMonth(v.getMonth());
     t.setDate(v.getDate());
 
-    var ndt = tzutil.shiftFromTz(t, this.state.tz);
+    /* var ndt = tzutil.shiftFromTz(t, this.state.tz); */
+    var ndt = this.shiftFromTz(t, this.state.tz);
     var info = this.shiftToTzInfo(ndt, this.state.tz);
 
     this.setState({
@@ -90,7 +92,8 @@ var TimeCard = React.createClass({
     t.setHours(v.getHours());
     t.setMinutes(v.getMinutes());
 
-    var ndt = tzutil.shiftFromTz(t, this.state.tz);
+    /* var ndt = tzutil.shiftFromTz(t, this.state.tz); */
+    var ndt = this.shiftFromTz(t, this.state.tz);
     var info = this.shiftToTzInfo(ndt, this.state.tz);
     console.log('TimeCard::_onChangeTime() shift - ' + ndt);
 
@@ -122,6 +125,8 @@ var TimeCard = React.createClass({
         utcOffset: changeTime.utcOffset,
         isDST: changeTime.isDST
       });
+
+      console.log('TimeCard::_onChangeTZ() -> DatePicker::setDate() - ' + this.props.fromto + ' / ' + changeTime.time);
       this.refs.datepicker.setDate(changeTime.time);
       this.refs.timepicker.setTime(changeTime.time, changeTime.utcOffset);
       var ndt = tzutil.shiftFromTz(changeTime.time, changeTZ);
@@ -138,10 +143,13 @@ var TimeCard = React.createClass({
                                                   tzutil.canonicalizeJsDateOffseet(this.state.time.getTimezoneOffset()),
                                                   abbr.offsets[0].offset);
 
+        console.log('Timecard::onChangeTZ() (abbr) - ' + ndt2 + ' / ' + tzTime);
+
         this.setState({
           tz: changeTZ,
           utcOffset: abbr.offsets[0].offset
         });
+
         this.refs.timepicker.setOffset(abbr.offsets[0].offset);
 
         this.props.onChange(null, tzTime);
@@ -160,6 +168,15 @@ var TimeCard = React.createClass({
       info = tzutil.shiftToTzInfo(localTime, tz);
     }
     return info;
+  },
+  shiftFromTz: function(time, tz) {
+    var info = _.findWhere(this.props.tzAbbrs, {abbr: tz});
+    if (info) {
+      var ndt = new Date(time.getTime() - (info.offsets[0].offset * 60 * 1000));
+      return ndt;
+    } else {
+      return tzutil.shiftFromTz(time, tz);
+    }
   },
   styles: {
     card: {
@@ -187,21 +204,24 @@ var TimeCard = React.createClass({
     }
   },
   formatDate: function(d) {
+    console.log('TimeCard::formatDate() - ' + this.props.fromto + ' before ' + d);
     var m = moment(d);
+    console.log('TimeCard::formatDate() - ' + this.props.fromto + ' after  ' + m.format('l (ddd)'));
     return m.format('l (ddd)');
   },
   render: function() {
-    var m = moment(this.state.time);
-    var disabled = this.props.fromto === 'to';
+    console.log('TimeCard::render() ' + this.props.fromto);
+    /* var disabled = this.props.fromto === 'to'; */
+    var disabled = false;
     return (
       <Paper style={this.styles.card} zDepth={2}>
         <DatePicker ref="datepicker"
                     formatDate={this.formatDate}
-                    defaultDate={this.state.time}
+                    defaultDate={this.props.initialTime}
                     disabled={disabled}
                     onChange={this._onChangeDate} />
         <DualTimePicker ref="timepicker"
-                        initialTime={this.state.time}
+                        initialTime={this.props.initialTime}
                         initialUtcOffset={this.state.utcOffset}
                         lang={this.props.lang}
                         disabled={disabled}
