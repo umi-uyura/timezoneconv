@@ -218,6 +218,7 @@ var TimeCard = React.createClass({
         <DatePicker ref="datepicker"
                     formatDate={this.formatDate}
                     defaultDate={this.props.initialTime}
+                    autoOk={true}
                     disabled={disabled}
                     onChange={this._onChangeDate} />
         <DualTimePicker ref="timepicker"
