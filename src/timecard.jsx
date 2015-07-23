@@ -129,7 +129,7 @@ var TimeCard = React.createClass({
       console.log('TimeCard::_onChangeTZ() -> DatePicker::setDate() - ' + this.props.fromto + ' / ' + changeTime.time);
       this.refs.datepicker.setDate(changeTime.time);
       this.refs.timepicker.setTime(changeTime.time, changeTime.utcOffset);
-      var ndt = tzutil.shiftFromTz(changeTime.time, changeTZ);
+      var ndt = this.shiftFromTz(changeTime.time, changeTZ);
 
       this.props.onChange(null, ndt);
     } else {
@@ -138,7 +138,7 @@ var TimeCard = React.createClass({
         console.log('Timecard::onChangeTZ() (abbr) - Hit! = ' + changeTZ + ' <- ' + this.state.tz);
         console.log('Timecard::onChangeTZ() (abbr) - ' + this.state.time + ' / ' + this.state.utcOffset);
 
-        var ndt2 = tzutil.shiftFromTz(this.state.time, this.state.tz);
+        var ndt2 = this.shiftFromTz(this.state.time, this.state.tz);
         var tzTime = tzutil.convertOffsetToOffset(this.state.time,
                                                   tzutil.canonicalizeJsDateOffseet(this.state.time.getTimezoneOffset()),
                                                   abbr.offsets[0].offset);
@@ -163,7 +163,7 @@ var TimeCard = React.createClass({
                                                tzutil.canonicalizeJsDateOffseet(localTime.getTimezoneOffset()),
                                                info.offsets[0].offset);
       info.utcOffset = info.offsets[0].offset;
-      info.isDST = info.abbr.endsWith('DT');
+      info.isDST = false;    // TODO: 略名時の夏時間判定（→別データを用意するしか無い）
     } else {
       info = tzutil.shiftToTzInfo(localTime, tz);
     }
