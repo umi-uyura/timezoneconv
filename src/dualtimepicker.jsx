@@ -19,36 +19,20 @@ var DualTimePicker = React.createClass({
   },
   getInitialState: function() {
     return {
-      format24hr: true,
-      time: this.props.initialTime,
-      utcOffset: this.props.initialUtcOffset
+      format24hr: true
     };
   },
   componentWillMount: function() {
     moment.locale(this.props.lang);
   },
-  _onChange: function(e, t) {
-    this.setTime(t);
-    this.props.onChange(e, t);
-  },
-  getTime: function() {
-    return this.state.time;
-  },
-  setTime: function(t, offset) {
-    if (undefined === offset) {
-      offset = this.state.utcOffset;
+  componentWillReceiveProps: function(nextProps) {
+    if (nextProps.initialTime !== this.props.initialTime) {
+      this.refs.picker24HR.setTime(nextProps.initialTime);
+      this.refs.pickerAMPM.setTime(nextProps.initialTime);
     }
-    this.refs.picker24HR.setTime(t);
-    this.refs.pickerAMPM.setTime(t);
-    this.setState({
-      time: t,
-      utcOffset: offset
-    });
   },
-  setOffset: function(offset) {
-    this.setState({
-      utcOffset: offset
-    });
+  _onChange: function(e, t) {
+    this.props.onChange(e, t);
   },
   styles: {
     wrapper: {
@@ -83,15 +67,15 @@ var DualTimePicker = React.createClass({
                     format="24hr"
                     disabled={this.props.disabled}
                     onChange={this._onChange}
-                    defaultTime={this.state.time} />
+                    defaultTime={this.props.initialTime} />
         <TimePicker ref="pickerAMPM"
                     style={this.state.format24hr ? styleHide : styleVisible }
                     format="ampm"
                     disabled={this.props.disabled}
                     onChange={this._onChange}
-                    defaultTime={this.state.time} />
+                    defaultTime={this.props.initialTime} />
         <div style={this.styles.offset}>
-          {this.formatUtcOffset(this.state.utcOffset)}
+          {this.formatUtcOffset(this.props.initialUtcOffset)}
         </div>
       </div>
     );

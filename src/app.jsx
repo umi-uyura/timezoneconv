@@ -48,7 +48,7 @@ function browserLanguage() {
 var App = React.createClass({
   getInitialState: function() {
     return {
-      basetime: new Date(),
+      basetime: new Date(),         // ローカルタイムに変換した基準時刻
       tz1: tzName,
       tz2: 'UTC'
     };
@@ -62,12 +62,12 @@ var App = React.createClass({
     };
   },
   _onChangeFrom: function(e, v) {
-    console.log('_onChangeFrom: ' + e + ' / ' + v);
-    this.refs.timecardTo.setDateTime(v);
+    console.log('_onChangeFrom: ' + e + ' / ' + v.time + ' / ' + v.tz);
+    this.setState({ basetime: v.time, tz1: v.tz});
   },
   _onChangeTo: function(e, v) {
-    console.log('_onChangeTo: ' + e + ' / ' + v);
-    this.refs.timecardFrom.setDateTime(v);
+    console.log('_onChangeTo: ' + e + ' / ' + v.time + ' / ' + v.tz);
+    this.setState({ basetime: v.time, tz2: v.tz});
   },
   _onToggle: function(e, toggled) {
     this.refs.timecardFrom.setTimeFormat(toggled ? '24hr' : 'ampm');
@@ -91,8 +91,8 @@ var App = React.createClass({
           <TimeCard ref="timecardFrom"
                     fromto="from"
                     lang={lang}
-                    initialTz={this.state.tz1}
-                    initialTime={this.state.basetime}
+                    tz={this.state.tz1}
+                    basetime={this.state.basetime}
                     tzItems={tzItems}
                     tzAbbrs={tzAbbrs}
                     onChange={this._onChangeFrom} />
@@ -105,8 +105,8 @@ var App = React.createClass({
           <TimeCard ref="timecardTo"
                     fromto="to"
                     lang={lang}
-                    initialTz="UTC"
-                    initialTime={this.state.basetime}
+                    tz="UTC"
+                    basetime={this.state.basetime}
                     tzItems={tzItems}
                     tzAbbrs={tzAbbrs}
                     onChange={this._onChangeTo} />
