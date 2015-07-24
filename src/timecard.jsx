@@ -96,8 +96,9 @@ var TimeCard = React.createClass({
     var changeTZ = v.target.value;
     if (_.contains(this.props.tzItems, changeTZ)) {
       console.log('Timecard::onChangeTZ() - Hit! = ' + changeTZ + ' <- ' + this.props.tz);
+      console.log('Timecard::onChangeTZ() - ' + this.state.time);
 
-      var changeTime = tzutil.convertTZtoTZInfo(this.state.time, this.props.tz, changeTZ);
+      var changeTime = tzutil.convertTZtoTZInfo(this.state.time, this.state.tz, changeTZ);
       console.log('Timecard::onChangeTZ() - changeTime = ' + changeTime.time + ' / ' + changeTime.utcOffset + ' / ' + changeTime.isDST);
 
       changeTime.time.setFullYear(this.state.time.getFullYear());
@@ -106,19 +107,14 @@ var TimeCard = React.createClass({
       changeTime.time.setHours(this.state.time.getHours());
       changeTime.time.setMinutes(this.state.time.getMinutes());
 
-      this.setState({
-        tz: changeTZ,
-        time: changeTime.time,
-        utcOffset: changeTime.utcOffset,
-        isDST: changeTime.isDST
-      });
-
-      console.log('TimeCard::_onChangeTZ() -> DatePicker::setDate() - ' + this.props.fromto + ' / ' + changeTime.time);
-      this.refs.datepicker.setDate(changeTime.time);
-      this.refs.timepicker.setTime(changeTime.time, changeTime.utcOffset);
       var ndt = this.shiftFromTz(changeTime.time, changeTZ);
 
-      this.props.onChange(null, ndt);
+      console.log('Timecard::onChangeTZ() - ' + ndt + ' <- ' + changeTime.time);
+
+      this.props.onChange(null, {
+        time: ndt,
+        tz: changeTZ
+      });
     } else {
       var abbr = _.findWhere(this.props.tzAbbrs, {abbr: changeTZ});
       if (abbr) {
@@ -126,20 +122,11 @@ var TimeCard = React.createClass({
         console.log('Timecard::onChangeTZ() (abbr) - ' + this.state.time + ' / ' + this.state.utcOffset);
 
         var ndt2 = this.shiftFromTz(this.state.time, this.props.tz);
-        var tzTime = tzutil.convertOffsetToOffset(this.state.time,
-                                                  tzutil.canonicalizeJsDateOffseet(this.state.time.getTimezoneOffset()),
-                                                  abbr.offsets[0].offset);
 
-        console.log('Timecard::onChangeTZ() (abbr) - ' + ndt2 + ' / ' + tzTime);
-
-        this.setState({
-          tz: changeTZ,
-          utcOffset: abbr.offsets[0].offset
+        this.props.onChange(null, {
+          time: ndt2,
+          tz: changeTZ
         });
-
-        this.refs.timepicker.setOffset(abbr.offsets[0].offset);
-
-        this.props.onChange(null, tzTime);
       }
     }
   },
