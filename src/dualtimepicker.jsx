@@ -31,6 +31,9 @@ var DualTimePicker = React.createClass({
       this.refs.pickerAMPM.setTime(nextProps.initialTime);
     }
   },
+  getTime: function() {
+    return this.props.initialTime;
+  },
   _onChange: function(e, t) {
     this.props.onChange(e, t);
   },
