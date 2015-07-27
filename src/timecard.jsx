@@ -39,16 +39,17 @@ var TimeCard = React.createClass({
     return {
       time: new Date(),       // ローカル時刻をタイムゾーンに合わせてシフトした日時
       utcOffset: 0,
-      isDst: false
+      isDST: false
     };
   },
   componentWillMount: function() {
     moment.locale(this.props.lang);
     var info = this.shiftToTzInfo(this.props.basetime, this.props.tz);
+    console.log('TimeCard::componentWillMount() - ' + info.time + ' / ' + info.utcOffset + ' / ' + info.isDST);
     this.setState({
       time: info.time,
       utcOffset: info.utcOffset,
-      isDst: info.isDst
+      isDST: info.isDST
     });
   },
   componentWillReceiveProps: function(nextProps) {
@@ -59,7 +60,7 @@ var TimeCard = React.createClass({
     this.setState({
       time: info.time,
       utcOffset: info.utcOffset,
-      isDst: info.isDst
+      isDST: info.isDST
     });
   },
   setTimeFormat: function(format) {
@@ -188,6 +189,7 @@ var TimeCard = React.createClass({
 
     console.log('TimeCard::render() ' + this.props.fromto);
     /* var disabled = this.props.fromto === 'to'; */
+    console.log('TimeCard::render() - ' + this.state.time + ' / ' + this.state.utcOffset + ' / ' + this.state.isDST);
     var disabled = false;
     return (
       <Paper style={styles.card} zDepth={2}>
