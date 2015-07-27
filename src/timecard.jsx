@@ -5,7 +5,7 @@ var mui = require('material-ui');
 var moment = require('moment-timezone');
 require('moment/min/locales');
 var _ = require('underscore');
-var tzutil = require('../lib/timezone-util');
+var tzUtil = require('../lib/timezone-util');
 
 var Paper = mui.Paper;
 var TextField = mui.TextField;
@@ -91,25 +91,25 @@ var TimeCard = React.createClass({
   shiftToTzInfo: function(localTime, tz) {
     var info = _.findWhere(this.props.tzAbbrs, {abbr: tz});
     if (info) {
-      info.time = tzutil.convertOffsetToOffset(localTime,
+      info.time = tzUtil.convertOffsetToOffset(localTime,
                                                info.offsets[0].offset,
-                                               tzutil.canonicalizeJsDateOffseet(localTime.getTimezoneOffset()));
+                                               tzUtil.canonicalizeJsDateOffseet(localTime.getTimezoneOffset()));
       info.utcOffset = info.offsets[0].offset;
       info.isDST = false;    // TODO: 略名時の夏時間判定（→別データを用意するしか無い）
     } else {
-      info = tzutil.shiftToTzInfo(localTime, tz);
+      info = tzUtil.shiftToTzInfo(localTime, tz);
     }
     return info;
   },
   shiftFromTz: function(time, tz) {
     var info = _.findWhere(this.props.tzAbbrs, {abbr: tz});
     if (info) {
-      var ndt = tzutil.convertOffsetToOffset(time,
-                                             tzutil.canonicalizeJsDateOffseet(time.getTimezoneOffset()),
+      var ndt = tzUtil.convertOffsetToOffset(time,
+                                             tzUtil.canonicalizeJsDateOffseet(time.getTimezoneOffset()),
                                              info.offsets[0].offset);
       return ndt;
     } else {
-      var ndt2 = tzutil.shiftFromTz(time, tz);
+      var ndt2 = tzUtil.shiftFromTz(time, tz);
       return ndt2;
     }
   },
