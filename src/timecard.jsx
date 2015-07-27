@@ -92,8 +92,8 @@ var TimeCard = React.createClass({
     var info = _.findWhere(this.props.tzAbbrs, {abbr: tz});
     if (info) {
       info.time = tzutil.convertOffsetToOffset(localTime,
-                                               tzutil.canonicalizeJsDateOffseet(localTime.getTimezoneOffset()),
-                                               info.offsets[0].offset);
+                                               info.offsets[0].offset,
+                                               tzutil.canonicalizeJsDateOffseet(localTime.getTimezoneOffset()));
       info.utcOffset = info.offsets[0].offset;
       info.isDST = false;    // TODO: 略名時の夏時間判定（→別データを用意するしか無い）
     } else {
