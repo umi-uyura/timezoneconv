@@ -61,6 +61,11 @@ var App = React.createClass({
       muiTheme: ThemeManager.getCurrentTheme()
     };
   },
+  componentDidMount: function() {
+    // TODO: 要検討
+    var app = document.getElementById('app');
+    app.className = 'reacted';
+  },
   _onChangeFrom: function(e, v) {
     console.log('_onChangeFrom: ' + e + ' / ' + v.time + ' / ' + v.tz);
     this.setState({ basetime: v.time, tz1: v.tz});
