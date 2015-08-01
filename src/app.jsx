@@ -12,6 +12,10 @@ var tzAbbr = require('../lib/timezone-abbrs');
 
 var mui = require("material-ui");
 var ThemeManager = new mui.Styles.ThemeManager();
+
+var tzcTheme = require('./theme/timezoneconv-theme');
+ThemeManager.setTheme(tzcTheme);
+
 var Paper = mui.Paper;
 var Toggle = mui.Toggle;
 var TimeCard = require('./timecard.jsx');
