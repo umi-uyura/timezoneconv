@@ -37,6 +37,21 @@ body {
   padding-right: 0px !important;
 }
 
+.app-loading-container {
+  height: 200px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.app-loading-container-finished {
+  display: none;
+}
+
+.app-loading {
+  margin: 0 auto;
+  padding-top: 100px;
+}
+
 .init-title {
   margin: 0;
   padding: 0;
