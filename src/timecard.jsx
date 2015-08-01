@@ -42,12 +42,19 @@ var TimeCard = React.createClass({
     this.refs.timepicker.setState({ format24hr: (format === '24hr') });
   },
   _onChangeDate: function(e, v) {
-    var t = this.props.basetime;
+    console.log('TimeCard::_onChangeDate() - ' + this.props.basetime + ' / ' + this.props.tz);
+    console.log('TimeCard::_onChangeDate() input - ' + e + ' / ' + v);
+
+    var t = this.refs.timepicker.getTime();
     t.setFullYear(v.getFullYear());
     t.setMonth(v.getMonth());
     t.setDate(v.getDate());
 
+    console.log('TimeCard::_onChangeDate() merge - ' + t);
+
     var ndt = this.shiftFromTz(t, this.props.tz);
+
+    console.log('TimeCard::_onChangeDate() ndt - ' + ndt);
 
     this.props.onChange(e, {
       time: ndt,
@@ -157,6 +164,7 @@ var TimeCard = React.createClass({
         <DatePicker ref="datepicker"
                     formatDate={this.formatDate}
                     defaultDate={info.time}
+                    value={info.time}
                     autoOk={true}
                     disabled={disabled}
                     onChange={this._onChangeDate} />
