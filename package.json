@@ -7,7 +7,7 @@
     "babelify": "browserify -t babelify src/app.jsx -o build/app.js",
     "watchify": "watchify -t babelify src/app.jsx -o build/app.js -v",
     "beefy": "beefy src/app.jsx:build/app.js src --live --open -- -t babelify",
-    "licensify": "browserify -t babelify src/app.jsx -p licensify -o build/app.js",
+    "licensify": "NODE_ENV=production browserify -t babelify src/app.jsx -p licensify -o build/app.js",
     "minify:html": "html-minifier -c html-minifier.conf index.html -o public/index.html",
     "minify:js": "uglifyjs build/app.js -o public/build/app.js --comments '/Modules in this bundle/'",
     "minify:css": "cleancss -o public/style/app.css style/app.css",
