@@ -1,6 +1,6 @@
 {
   "name": "timezoneconv",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Timezone converter",
   "main": "index.html",
   "scripts": {
