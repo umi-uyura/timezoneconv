@@ -20,6 +20,8 @@ var Paper = mui.Paper;
 var Toggle = mui.Toggle;
 var TimeCard = require('./timecard.jsx');
 var AppBar = mui.AppBar;
+var IconButton = mui.IconButton;
+var GitHubIcon = require('./icon/github.jsx');
 
 var lang = browserLanguage();
 console.log('Browser launguage: ' + lang);
@@ -96,9 +98,19 @@ var App = React.createClass({
   },
   render: function() {
     console.log('App::render()');
+
+    var AppBarRightButton = (
+      <IconButton tooltip="GitHub" linkButton={true} href="https://github.com/umi-uyura/timezoneconv">
+          <GitHubIcon color={ThemeManager.getCurrentTheme().component.appBar.textColor} />
+      </IconButton>
+    );
+
     return (
       <div>
-        <AppBar title="TimezoneConv" showMenuIconButton={false} />
+        <AppBar className="appbar"
+                title="TimezoneConv"
+                showMenuIconButton={true}
+                iconElementRight={AppBarRightButton} />
         <Paper style={this.styles.card} zDepth={1}>
           <TimeCard ref="timecardFrom"
                     fromto="from"
