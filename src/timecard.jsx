@@ -77,21 +77,28 @@ var TimeCard = React.createClass({
   },
   _onChangeTZ: function(v) {
     var changeTZ = v.target.value;
-    if (_.contains(this.props.tzItems, changeTZ) || _.find(this.props.tzAbbrs, {abbr: changeTZ})) {
+    var changeTZUpcase = changeTZ.toUpperCase();
+
+    var foundTzItems = _.contains(this.props.tzItems, changeTZ);
+    var foundTzAbbrs = _.find(this.props.tzAbbrs, {abbr: changeTZUpcase});
+
+    if (foundTzItems || foundTzAbbrs) {
       console.log('Timecard::onChangeTZ() - Hit! = ' + changeTZ + ' <- ' + this.props.tz);
       console.log('Timecard::onChangeTZ() - Base Time = ' + this.props.basetime);
+
+      var toTz = foundTzAbbrs ? changeTZUpcase : changeTZ;
 
       var d = this.refs.datepicker.getDate();
       var t = this.refs.timepicker.getTime();
       var dt = new Date(d.getFullYear(), d.getMonth(), d.getDate(), t.getHours(), t.getMinutes());
       console.log('TimeCard::onChangeTZ() - Date = ' + d + '\n/ Time = ' + t + '\n/ ' + dt);
 
-      var ndt = this.shiftFromTz(dt, changeTZ);
+      var ndt = this.shiftFromTz(dt, toTz);
       console.log('TimeCard::onChangeTZ() - ndt = ' + ndt);
 
       this.props.onChange(null, {
         time: ndt,
-        tz: changeTZ
+        tz: toTz
       });
     } else {
       this.refs.tzfield.setErrorText('Unkown Timezone');
