@@ -66,12 +66,11 @@ var App = React.createClass({
     };
   },
   componentDidMount: function() {
-    // TODO: 初期表示内容との差分処理について要健闘
+    // TODO: 初期表示内容との差分処理について要検討
     var app = document.getElementById('app');
     app.className = 'reacted';
 
     var app_container = document.getElementsByClassName('app-loading-container');
-    console.log(app_container);
     app_container[0].className = app_container[0].className + ' app-loading-container-finished';
   },
   _onChangeFrom: function(e, v) {
