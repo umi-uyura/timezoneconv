@@ -93,6 +93,8 @@ var TimeCard = React.createClass({
         time: ndt,
         tz: changeTZ
       });
+    } else {
+      this.refs.tzfield.setErrorText('Unkown Timezone');
     }
   },
   shiftToTzInfo: function(localTime, tz) {
