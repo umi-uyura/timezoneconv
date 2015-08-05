@@ -93,7 +93,9 @@ var App = React.createClass({
       margin: '0 auto'
     },
     toggle_wrap: {
-      textAlign: 'right'
+      textAlign: 'right',
+      width: '256px',
+      margin: '0 auto'
     }
   },
   render: function() {
