@@ -102,7 +102,7 @@ var App = React.createClass({
     console.log('App::render()');
 
     var AppBarRightButton = (
-      <IconButton tooltip="GitHub" linkButton={true} href="https://github.com/umi-uyura/timezoneconv">
+      <IconButton tooltip="GitHub" linkButton={true} href="https://github.com/umi-uyura/timezoneconv" target="_blank">
           <GitHubIcon color={ThemeManager.getCurrentTheme().component.appBar.textColor} />
       </IconButton>
     );
