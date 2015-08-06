@@ -55,8 +55,8 @@ var App = React.createClass({
   getInitialState: function() {
     return {
       basetime: new Date(),         // ローカルタイムに変換した基準時刻
-      tz1: tzName,
-      tz2: 'UTC'
+      tz1: 'UTC',
+      tz2: tzName
     };
   },
   childContextTypes: {
