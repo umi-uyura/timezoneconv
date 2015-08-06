@@ -170,6 +170,15 @@ var TimeCard = React.createClass({
 
     return (
       <Paper style={styles.card} zDepth={2}>
+        <div style={styles.tzwrapper}>
+          <TextField ref="tzfield"
+                     style={styles.timezone}
+                     defaultValue={this.props.tz}
+                     onChange={this._onChangeTZ} />
+          <div style={styles.dst}>
+            {info.isDST ? '夏時間' : ''}
+          </div>
+        </div>
         <DatePicker ref="datepicker"
                     formatDate={this.formatDate}
                     defaultDate={info.time}
@@ -183,15 +192,6 @@ var TimeCard = React.createClass({
                         lang={this.props.lang}
                         disabled={disabled}
                         onChange={this._onChangeTime} />
-        <div style={styles.tzwrapper}>
-          <TextField ref="tzfield"
-                     style={styles.timezone}
-                     defaultValue={this.props.tz}
-                     onChange={this._onChangeTZ} />
-          <div style={styles.dst}>
-            {info.isDST ? '夏時間' : ''}
-          </div>
-        </div>
       </Paper>
     );
   }
