@@ -8,9 +8,12 @@ var _ = require('underscore');
 var tzUtil = require('../lib/timezone-util');
 
 var Paper = mui.Paper;
+var Card = mui.Card;
+var CardText = mui.CardText;
 var TextField = mui.TextField;
 var DatePicker = mui.DatePicker;
 var DualTimePicker = require('./dualtimepicker.jsx');
+var TimeCardText = require('./timecardtext.jsx');
 var Colors = mui.Styles.Colors;
 
 var util = require('util');
@@ -34,6 +37,9 @@ var TimeCard = React.createClass({
     tzItems: React.PropTypes.array,
     tzAbbrs: React.PropTypes.array,
     onChange: React.PropTypes.func.isRequired
+  },
+  contextTypes: {
+    muiTheme: React.PropTypes.object
   },
   componentWillMount: function() {
     moment.locale(this.props.lang);
@@ -82,18 +88,24 @@ var TimeCard = React.createClass({
     var foundTzItems = _.contains(this.props.tzItems, changeTZ);
     var foundTzAbbrs = _.find(this.props.tzAbbrs, {abbr: changeTZUpcase});
 
+    var disabled = this.props.fromto === 'to';
+
     if (foundTzItems || foundTzAbbrs) {
       console.log('Timecard::onChangeTZ() - Hit! = ' + changeTZ + ' <- ' + this.props.tz);
       console.log('Timecard::onChangeTZ() - Base Time = ' + this.props.basetime);
 
       var toTz = foundTzAbbrs ? changeTZUpcase : changeTZ;
+      var ndt = this.props.basetime;
 
-      var d = this.refs.datepicker.getDate();
-      var t = this.refs.timepicker.getTime();
-      var dt = new Date(d.getFullYear(), d.getMonth(), d.getDate(), t.getHours(), t.getMinutes());
-      console.log('TimeCard::onChangeTZ() - Date = ' + d + '\n/ Time = ' + t + '\n/ ' + dt);
+      if (!disabled) {
+        var d = this.refs.datepicker.getDate();
+        var t = this.refs.timepicker.getTime();
+        var dt = new Date(d.getFullYear(), d.getMonth(), d.getDate(), t.getHours(), t.getMinutes());
+        console.log('TimeCard::onChangeTZ() - Date = ' + d + '\n/ Time = ' + t + '\n/ ' + dt);
 
-      var ndt = this.shiftFromTz(dt, toTz);
+        ndt = this.shiftFromTz(dt, toTz);
+      }
+
       console.log('TimeCard::onChangeTZ() - ndt = ' + ndt);
 
       this.props.onChange(null, {
@@ -157,28 +169,31 @@ var TimeCard = React.createClass({
         fontSize: 'small',
         color: Colors.grey400,
         backgroundColor: 'white'
+      },
+      resultWrapper: {
+        width: '256px',
+        margin: '0 auto',
+        paddingTop: '12px'
+      },
+      cardToResult: {
+        height: '36px',
+        padding: '0px 0px',
+        fontSize: '18px',
+        textAlign: 'left',
+        color: this.context.muiTheme.palette.accent1Color
       }
     };
 
     console.log('TimeCard::render() ' + this.props.fromto + ' / ' + this.props.basetime);
 
-    /* var disabled = this.props.fromto === 'to'; */
-    var disabled = false;
+    var disabled = this.props.fromto === 'to';
+    /* var disabled = false; */
 
     var info = this.shiftToTzInfo(this.props.basetime, this.props.tz);
     console.log('TimeCard::render() - shifted ' + this.props.fromto + ' / ' + info.time + ' / ' + info.utcOffset + ' / ' + info.isDST + ' / ' + this.props.tz);
 
-    return (
-      <Paper style={styles.card} zDepth={2}>
-        <div style={styles.tzwrapper}>
-          <TextField ref="tzfield"
-                     style={styles.timezone}
-                     defaultValue={this.props.tz}
-                     onChange={this._onChangeTZ} />
-          <div style={styles.dst}>
-            {info.isDST ? '夏時間' : ''}
-          </div>
-        </div>
+    var picker = (
+      <div>
         <DatePicker ref="datepicker"
                     formatDate={this.formatDate}
                     defaultDate={info.time}
@@ -192,7 +207,35 @@ var TimeCard = React.createClass({
                         lang={this.props.lang}
                         disabled={disabled}
                         onChange={this._onChangeTime} />
-      </Paper>
+      </div>
+    );
+
+    var text = (
+      <div>
+        <div style={styles.resultWrapper}>
+          <CardText ref="datepicker" style={styles.cardToResult}>
+            {this.formatDate(info.time)}
+          </CardText>
+        </div>
+        <TimeCardText ref="timepicker"
+                      initialTime={info.time}
+                      initialUtcOffset={info.utcOffset} />
+      </div>
+    );
+
+    return (
+      <Card style={styles.card} zDepth={2}>
+        <div style={styles.tzwrapper}>
+          <TextField ref="tzfield"
+                     style={styles.timezone}
+                     defaultValue={this.props.tz}
+                     onChange={this._onChangeTZ} />
+          <div style={styles.dst}>
+            {info.isDST ? '夏時間' : ''}
+          </div>
+        </div>
+        {disabled ? text : picker}
+      </Card>
     );
   }
 });
