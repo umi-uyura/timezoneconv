@@ -202,8 +202,8 @@ var TimeCard = React.createClass({
                     disabled={disabled}
                     onChange={this._onChangeDate} />
         <DualTimePicker ref="timepicker"
-                        initialTime={info.time}
-                        initialUtcOffset={info.utcOffset}
+                        time={info.time}
+                        utcOffset={info.utcOffset}
                         lang={this.props.lang}
                         disabled={disabled}
                         onChange={this._onChangeTime} />
@@ -218,8 +218,8 @@ var TimeCard = React.createClass({
           </CardText>
         </div>
         <TimeCardText ref="timepicker"
-                      initialTime={info.time}
-                      initialUtcOffset={info.utcOffset} />
+                      time={info.time}
+                      utcOffset={info.utcOffset} />
       </div>
     );
 

@@ -12,8 +12,8 @@ var Colors = mui.Styles.Colors;
 var DualTimePicker = React.createClass({
   getDefaultProps: function() {
     return {
-      initialTime: new Date(),
-      initialUtcOffset: 0,
+      time: new Date(),
+      utcOffset: 0,
       lang: 'en'
     };
   },
@@ -26,13 +26,13 @@ var DualTimePicker = React.createClass({
     moment.locale(this.props.lang);
   },
   componentWillReceiveProps: function(nextProps) {
-    if (nextProps.initialTime !== this.props.initialTime) {
-      this.refs.picker24HR.setTime(nextProps.initialTime);
-      this.refs.pickerAMPM.setTime(nextProps.initialTime);
+    if (nextProps.time !== this.props.time) {
+      this.refs.picker24HR.setTime(nextProps.time);
+      this.refs.pickerAMPM.setTime(nextProps.time);
     }
   },
   getTime: function() {
-    return this.props.initialTime;
+    return this.props.time;
   },
   _onChange: function(e, t) {
     this.props.onChange(e, t);
@@ -70,15 +70,15 @@ var DualTimePicker = React.createClass({
                     format="24hr"
                     disabled={this.props.disabled}
                     onChange={this._onChange}
-                    defaultTime={this.props.initialTime} />
+                    defaultTime={this.props.time} />
         <TimePicker ref="pickerAMPM"
                     style={this.state.format24hr ? styleHide : styleVisible }
                     format="ampm"
                     disabled={this.props.disabled}
                     onChange={this._onChange}
-                    defaultTime={this.props.initialTime} />
+                    defaultTime={this.props.time} />
         <div style={this.styles.offset}>
-          {this.formatUtcOffset(this.props.initialUtcOffset)}
+          {this.formatUtcOffset(this.props.utcOffset)}
         </div>
       </div>
     );

@@ -12,8 +12,8 @@ var Colors = mui.Styles.Colors;
 var TimeCardText = React.createClass({
   getDefaultProps: function() {
     return {
-      initialTime: new Date(),
-      initialUtcOffset: 0,
+      time: new Date(),
+      utcOffset: 0,
       lang: 'en'
     };
   },
@@ -57,7 +57,9 @@ var TimeCardText = React.createClass({
     };
 
     var format = this.state.format24hr ? '24hr' : 'ampm';
-    var time = this.state.format24hr ? moment(this.props.initialTime).format('HH:mm') : moment(this.props.initialTime).locale('en').format('hh:mm a');
+    var time = this.state.format24hr ?
+               moment(this.props.time).format('HH:mm') :
+               moment(this.props.time).locale('en').format('hh:mm a');
 
     return (
       <div style={styles.wrapper}>
@@ -65,7 +67,7 @@ var TimeCardText = React.createClass({
           {time}
         </CardText>
         <div style={styles.offset}>
-          {this.formatUtcOffset(this.props.initialUtcOffset)}
+          {this.formatUtcOffset(this.props.utcOffset)}
         </div>
       </div>
     );
