@@ -71,10 +71,6 @@ body {
   margin: 0;
 }
 
-.appbar button:first-child {
-  display: none !important;
-}
-
 .footer-container {
   width: 100%;
   height: 24px;

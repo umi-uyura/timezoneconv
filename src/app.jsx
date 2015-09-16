@@ -112,9 +112,8 @@ var App = React.createClass({
 
     return (
       <div>
-        <AppBar className="appbar"
-                title="TimezoneConv"
-                showMenuIconButton={true}
+        <AppBar title="TimezoneConv"
+                showMenuIconButton={false}
                 iconElementRight={AppBarRightButton} />
         <Paper style={this.styles.card} zDepth={1}>
           <TimeCard ref="timecardFrom"
